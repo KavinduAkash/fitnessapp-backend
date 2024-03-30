@@ -1,9 +1,11 @@
 package com.sliit.fitnessbackend.controller;
 
 import com.sliit.fitnessbackend.dto.ReqRes;
-import com.sliit.fitnessbackend.dto.UserSignUpRequestDTO;
+import com.sliit.fitnessbackend.dto.request.UserSignUpRequestDTO;
+import com.sliit.fitnessbackend.dto.response.CommonResponseDTO;
 import com.sliit.fitnessbackend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +20,9 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<ReqRes> signUp(@RequestBody UserSignUpRequestDTO signUpRequest){
-        return ResponseEntity.ok(authService.signUp(signUpRequest));
+    public ResponseEntity<CommonResponseDTO> signUp(@RequestBody UserSignUpRequestDTO signUpRequest){
+        boolean result = authService.signUp(signUpRequest);
+        return new ResponseEntity<>(new CommonResponseDTO(result, "User account created successfully!"), HttpStatus.OK);
     }
     @PostMapping("/signin")
     public ResponseEntity<ReqRes> signIn(@RequestBody ReqRes signInRequest){

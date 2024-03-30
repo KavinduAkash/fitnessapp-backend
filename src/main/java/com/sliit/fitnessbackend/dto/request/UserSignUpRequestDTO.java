@@ -1,4 +1,4 @@
-package com.sliit.fitnessbackend.dto;
+package com.sliit.fitnessbackend.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
