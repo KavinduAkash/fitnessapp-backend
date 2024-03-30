@@ -2,9 +2,10 @@ package com.sliit.fitnessbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class FitnessBackendApplication {
+public class FitnessBackendApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FitnessBackendApplication.class, args);
