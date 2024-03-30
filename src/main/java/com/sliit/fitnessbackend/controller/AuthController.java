@@ -1,6 +1,7 @@
 package com.sliit.fitnessbackend.controller;
 
 import com.sliit.fitnessbackend.dto.ReqRes;
+import com.sliit.fitnessbackend.dto.UserSignUpRequestDTO;
 import com.sliit.fitnessbackend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<ReqRes> signUp(@RequestBody ReqRes signUpRequest){
+    public ResponseEntity<ReqRes> signUp(@RequestBody UserSignUpRequestDTO signUpRequest){
         return ResponseEntity.ok(authService.signUp(signUpRequest));
     }
     @PostMapping("/signin")

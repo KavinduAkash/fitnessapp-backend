@@ -1,6 +1,7 @@
 package com.sliit.fitnessbackend.service;
 
 import com.sliit.fitnessbackend.dto.ReqRes;
+import com.sliit.fitnessbackend.dto.UserSignUpRequestDTO;
 import com.sliit.fitnessbackend.entity.OurUsers;
 import com.sliit.fitnessbackend.repository.OurUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,20 @@ public class AuthService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public ReqRes signUp(ReqRes registrationRequest){
+    public ReqRes signUp(UserSignUpRequestDTO registrationRequest){
         ReqRes resp = new ReqRes();
         try {
             OurUsers ourUsers = new OurUsers();
+
+            ourUsers.setFirstName(registrationRequest.getFirstName());
+            ourUsers.setLastName(registrationRequest.getLastName());
+            ourUsers.setDob(registrationRequest.getDob());
             ourUsers.setEmail(registrationRequest.getEmail());
             ourUsers.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-            ourUsers.setRole(registrationRequest.getRole());
+            ourUsers.setRole("USER"); // USER
+            ourUsers.setStatus("ACTIVE"); // ACTIVE or DELETED
+            ourUsers.setVisibility("PUBLIC"); // PUBLIC or PRIVATE
+
             OurUsers ourUserResult = ourUserRepo.save(ourUsers);
             if (ourUserResult != null && ourUserResult.getId()>0) {
                 resp.setOurUsers(ourUserResult);
