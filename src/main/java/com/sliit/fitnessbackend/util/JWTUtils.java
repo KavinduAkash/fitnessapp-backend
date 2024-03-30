@@ -1,4 +1,4 @@
-package com.sliit.fitnessbackend.service;
+package com.sliit.fitnessbackend.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

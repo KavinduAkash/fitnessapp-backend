@@ -1,6 +1,6 @@
 package com.sliit.fitnessbackend.config;
 
-import com.sliit.fitnessbackend.service.JWTUtils;
+import com.sliit.fitnessbackend.util.JWTUtils;
 import com.sliit.fitnessbackend.service.OurUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
