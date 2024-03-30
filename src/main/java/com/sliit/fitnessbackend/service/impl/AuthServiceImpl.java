@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -29,6 +30,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean signUp(UserSignUpRequestDTO registrationRequest){
         try {
+
+            // check account availability
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(registrationRequest.getEmail());
+            if (!byEmail.isEmpty())
+                throw new UserException(409, "An account already exists with given email!");
+
             OurUsers ourUsers = new OurUsers(); // define entity object
 
             // assign values
