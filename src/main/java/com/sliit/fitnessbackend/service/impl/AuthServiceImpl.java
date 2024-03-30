@@ -31,6 +31,9 @@ public class AuthServiceImpl implements AuthService {
     public boolean signUp(UserSignUpRequestDTO registrationRequest){
         try {
 
+            if(registrationRequest.getFirstName()==null || registrationRequest.getLastName()==null || registrationRequest.getEmail()==null || registrationRequest.getDob()==null)
+                throw new UserException(422, "Invalid data");
+
             // check account availability
             Optional<OurUsers> byEmail = ourUserRepo.findByEmail(registrationRequest.getEmail());
             if (!byEmail.isEmpty())
