@@ -50,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
             ourUsers.setRole("USER"); // USER
             ourUsers.setStatus("ACTIVE"); // ACTIVE or DELETED
             ourUsers.setVisibility("PUBLIC"); // PUBLIC or PRIVATE
+            ourUsers.setProfilePic(null);
 
             // save user object in db
             OurUsers ourUserResult = ourUserRepo.save(ourUsers);

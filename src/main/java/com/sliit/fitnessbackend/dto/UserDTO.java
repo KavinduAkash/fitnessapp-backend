@@ -1,41 +1,26 @@
-package com.sliit.fitnessbackend.entity;
+package com.sliit.fitnessbackend.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
-@Data
-@Entity
-@Table(name = "ourusers")
-public class OurUsers implements UserDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class UserDTO {
     private Integer id;
     private String firstName;
     private String lastName;
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dob;
     private String email;
     private String password;
     private String role; // USER
     private String visibility; // PUBLIC or PRIVATE
     private String status; // ACTIVE or DELETED
-
     private String profilePic;
 
-    public OurUsers() {
+    public UserDTO() {
     }
 
-    public OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
-                    String visibility, String status, String profilePic) {
+    public UserDTO(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
+                   String visibility, String status, String profilePic) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -46,36 +31,6 @@ public class OurUsers implements UserDetails {
         this.visibility = visibility;
         this.status = status;
         this.profilePic = profilePic;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 
     public Integer getId() {
@@ -156,5 +111,21 @@ public class OurUsers implements UserDetails {
 
     public void setProfilePic(String profilePic) {
         this.profilePic = profilePic;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", dob=" + dob +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", visibility='" + visibility + '\'' +
+                ", status='" + status + '\'' +
+                ", profilePic='" + profilePic + '\'' +
+                '}';
     }
 }
