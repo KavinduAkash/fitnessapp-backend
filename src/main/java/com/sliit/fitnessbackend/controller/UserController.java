@@ -11,11 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user2")
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserService userService;
-    @GetMapping("/test")
+    @GetMapping("/my")
     public ResponseEntity<CommonDataResponseDTO> getUserData(){
         UserDTO myProfile = userService.getMyProfile();
         return new ResponseEntity<>(new CommonDataResponseDTO<>(true, "User account created successfully!", myProfile), HttpStatus.OK);
