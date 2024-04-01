@@ -28,14 +28,14 @@ public class OurUsers implements UserDetails {
     private String role; // USER
     private String visibility; // PUBLIC or PRIVATE
     private String status; // ACTIVE or DELETED
-
+    private String gender; // MALE or FEMALE or OTHER
     private String profilePic;
 
     public OurUsers() {
     }
 
     public OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
-                    String visibility, String status, String profilePic) {
+                    String visibility, String status, String gender, String profilePic) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -45,6 +45,7 @@ public class OurUsers implements UserDetails {
         this.role = role;
         this.visibility = visibility;
         this.status = status;
+        this.gender = gender;
         this.profilePic = profilePic;
     }
 
@@ -148,6 +149,14 @@ public class OurUsers implements UserDetails {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getProfilePic() {

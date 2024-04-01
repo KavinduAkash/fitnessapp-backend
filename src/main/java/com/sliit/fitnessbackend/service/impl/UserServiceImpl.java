@@ -32,14 +32,15 @@ public class UserServiceImpl implements UserService {
 
             OurUsers ourUsers = byEmail.get();
 
-            /* UserDTO(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
-                    String visibility, String status, String profilePic) */
+            /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
+                    String visibility, String status, String gender, String profilePic) */
             return new UserDTO(
                     ourUsers.getId(),
                     ourUsers.getFirstName(),
                     ourUsers.getLastName(),
                     ourUsers.getDob(),
                     ourUsers.getEmail(),
+                    ourUsers.getGender(),
                     null,
                     ourUsers.getRole(),
                     ourUsers.getVisibility(),

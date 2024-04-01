@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
     public boolean signUp(UserSignUpRequestDTO registrationRequest){
         try {
 
-            if(registrationRequest.getFirstName()==null || registrationRequest.getLastName()==null || registrationRequest.getEmail()==null || registrationRequest.getDob()==null)
+            if(registrationRequest.getFirstName()==null || registrationRequest.getLastName()==null || registrationRequest.getEmail()==null || registrationRequest.getDob()==null || registrationRequest.getGender() == null)
                 throw new UserException(422, "Invalid data");
 
             // check account availability
@@ -50,6 +50,7 @@ public class AuthServiceImpl implements AuthService {
             ourUsers.setRole("USER"); // USER
             ourUsers.setStatus("ACTIVE"); // ACTIVE or DELETED
             ourUsers.setVisibility("PUBLIC"); // PUBLIC or PRIVATE
+            ourUsers.setGender(registrationRequest.getGender()); // MALE or FEMALE or OTHER
             ourUsers.setProfilePic(null);
 
             // save user object in db

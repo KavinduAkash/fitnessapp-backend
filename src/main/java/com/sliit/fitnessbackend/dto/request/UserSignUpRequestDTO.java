@@ -16,6 +16,7 @@ public class UserSignUpRequestDTO {
     private String firstName;
     private String lastName;
     private Date dob;
+    private String gender; // MALE or FEMALE or OTHER
     private String email;
     private String password;
 }

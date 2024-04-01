@@ -11,6 +11,7 @@ public class UserDTO {
     private Date dob;
     private String email;
     private String password;
+    private String gender;
     private String role; // USER
     private String visibility; // PUBLIC or PRIVATE
     private String status; // ACTIVE or DELETED
@@ -19,13 +20,14 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
+    public UserDTO(Integer id, String firstName, String lastName, Date dob, String email, String password, String gender, String role,
                    String visibility, String status, String profilePic) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
         this.email = email;
+        this.gender = gender;
         this.password = password;
         this.role = role;
         this.visibility = visibility;
@@ -113,6 +115,14 @@ public class UserDTO {
         this.profilePic = profilePic;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -122,6 +132,7 @@ public class UserDTO {
                 ", dob=" + dob +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", gender='" + gender + '\'' +
                 ", role='" + role + '\'' +
                 ", visibility='" + visibility + '\'' +
                 ", status='" + status + '\'' +
