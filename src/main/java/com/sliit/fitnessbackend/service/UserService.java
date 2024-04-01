@@ -5,5 +5,6 @@ import com.sliit.fitnessbackend.dto.UserDTO;
 public interface UserService {
 
     public UserDTO getMyProfile();
+    public UserDTO getUpdateMyProfile(UserDTO userDTO);
 
 }

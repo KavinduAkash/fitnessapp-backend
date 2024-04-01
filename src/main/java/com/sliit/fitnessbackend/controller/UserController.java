@@ -18,6 +18,14 @@ public class UserController {
     @GetMapping("/my")
     public ResponseEntity<CommonDataResponseDTO> getUserData(){
         UserDTO myProfile = userService.getMyProfile();
-        return new ResponseEntity<>(new CommonDataResponseDTO<>(true, "User account created successfully!", myProfile), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, myProfile), HttpStatus.OK);
+    }
+
+    @PutMapping("/my")
+    public ResponseEntity<CommonDataResponseDTO> updateUserData(@RequestBody UserDTO userDTO) {
+        UserDTO updateMyProfile = userService.getUpdateMyProfile(userDTO);
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "User's profile is updated successfully!", updateMyProfile
+                ), HttpStatus.OK);
     }
 }
