@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.File;
+
 import static com.sliit.fitnessbackend.constant.ApplicationConstant.*;
 
 @ControllerAdvice
@@ -21,6 +23,12 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {UserException.class})
     public ResponseEntity handleUserException(UserException ex, WebRequest webRequest) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponseDTO(false, ex.getStatus(), ex.getMessage()), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(value = {FileException.class})
+    public ResponseEntity handleFileException(FileException ex, WebRequest webRequest) {
         return new ResponseEntity<>(
                 new ErrorMessageResponseDTO(false, ex.getStatus(), ex.getMessage()), HttpStatus.OK);
     }

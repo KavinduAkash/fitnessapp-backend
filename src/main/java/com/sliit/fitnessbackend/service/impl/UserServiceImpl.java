@@ -2,14 +2,20 @@ package com.sliit.fitnessbackend.service.impl;
 
 import com.sliit.fitnessbackend.dto.UserDTO;
 import com.sliit.fitnessbackend.entity.OurUsers;
+import com.sliit.fitnessbackend.exception.FileException;
 import com.sliit.fitnessbackend.exception.UserException;
 import com.sliit.fitnessbackend.repository.OurUserRepo;
 import com.sliit.fitnessbackend.service.UserService;
+import com.sliit.fitnessbackend.util.FileManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.Optional;
 
@@ -55,7 +61,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUpdateMyProfile(UserDTO userDTO) {
+    public UserDTO updateMyProfile(UserDTO userDTO) {
         try {
             // identify user via token
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -97,6 +103,48 @@ public class UserServiceImpl implements UserService {
                     save.getStatus(),
                     save.getProfilePic()
             );
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public UserDTO updateMyProfilePic(MultipartFile file) {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if(byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // upload profile pic
+            String fileName = FileManager.uploadProfilePic(file);
+
+            // get user
+            OurUsers ourUsers = byEmail.get();
+
+            // set profile pic value
+            ourUsers.setProfilePic(fileName);
+
+            // update the user
+            OurUsers save = ourUserRepo.save(ourUsers);
+
+            /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
+                    String visibility, String status, String gender, String profilePic) */
+            return new UserDTO(
+                    save.getId(),
+                    save.getFirstName(),
+                    save.getLastName(),
+                    save.getDob(),
+                    save.getEmail(),
+                    save.getGender(),
+                    null,
+                    save.getRole(),
+                    save.getVisibility(),
+                    save.getStatus(),
+                    save.getProfilePic()
+            );
+        } catch (IOException ex) {
+            throw new FileException(400, "error");
         } catch (Exception e) {
             throw e;
         }
