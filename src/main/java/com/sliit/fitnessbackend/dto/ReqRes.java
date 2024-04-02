@@ -3,7 +3,6 @@ package com.sliit.fitnessbackend.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sliit.fitnessbackend.entity.OurUsers;
-import com.sliit.fitnessbackend.entity.Product;
 import lombok.Data;
 
 import java.util.List;
@@ -23,6 +22,5 @@ public class ReqRes {
     private String email;
     private String role;
     private String password;
-    private List<Product> products;
     private OurUsers ourUsers;
 }
