@@ -29,7 +29,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getMyProfile() {
-
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             System.out.println(authentication);
@@ -40,26 +39,10 @@ public class UserServiceImpl implements UserService {
 
             OurUsers ourUsers = byEmail.get();
 
-            /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
-                    String visibility, String status, String gender, String profilePic) */
-            return new UserDTO(
-                    ourUsers.getId(),
-                    ourUsers.getFirstName(),
-                    ourUsers.getLastName(),
-                    ourUsers.getDob(),
-                    ourUsers.getEmail(),
-                    ourUsers.getGender(),
-                    null,
-                    ourUsers.getRole(),
-                    ourUsers.getVisibility(),
-                    ourUsers.getStatus(),
-                    ourUsers.getProfilePic()
-            );
-
+            return prepareUserDTO(ourUsers);
         } catch (Exception e) {
             throw e;
         }
-
     }
 
     @Override
@@ -90,21 +73,7 @@ public class UserServiceImpl implements UserService {
             // update user with new data
             OurUsers save = ourUserRepo.save(ourUsers);
 
-            /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
-                    String visibility, String status, String gender, String profilePic) */
-            return new UserDTO(
-                    save.getId(),
-                    save.getFirstName(),
-                    save.getLastName(),
-                    save.getDob(),
-                    save.getEmail(),
-                    save.getGender(),
-                    null,
-                    save.getRole(),
-                    save.getVisibility(),
-                    save.getStatus(),
-                    save.getProfilePic()
-            );
+            return prepareUserDTO(save);
         } catch (Exception e) {
             throw e;
         }
@@ -130,21 +99,7 @@ public class UserServiceImpl implements UserService {
             // update the user
             OurUsers save = ourUserRepo.save(ourUsers);
 
-            /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
-                    String visibility, String status, String gender, String profilePic) */
-            return new UserDTO(
-                    save.getId(),
-                    save.getFirstName(),
-                    save.getLastName(),
-                    save.getDob(),
-                    save.getEmail(),
-                    save.getGender(),
-                    null,
-                    save.getRole(),
-                    save.getVisibility(),
-                    save.getStatus(),
-                    save.getProfilePic()
-            );
+            return prepareUserDTO(save);
         } catch (IOException ex) {
             throw new FileException(400, "error");
         } catch (Exception e) {
@@ -158,43 +113,77 @@ public class UserServiceImpl implements UserService {
             List<UserDTO> userList = new ArrayList<>();
             List<OurUsers> ourUsers = ourUserRepo.searchUsers(search);
             for (OurUsers user : ourUsers) {
-                userList.add(
-                        /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
-                        String visibility, String status, String gender, String profilePic) */
-                        user.getVisibility().equals("PRIVATE") ? // check profile visibility
-                                new UserDTO(
-                                        user.getId(),
-                                        user.getFirstName(),
-                                        user.getLastName(),
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        null,
-                                        user.getVisibility(),
-                                        user.getStatus(),
-                                        user.getProfilePic()
-                                )
-                                :
-                                new UserDTO(
-                                        user.getId(),
-                                        user.getFirstName(),
-                                        user.getLastName(),
-                                        user.getDob(),
-                                        null,
-                                        user.getGender(),
-                                        null,
-                                        user.getRole(),
-                                        user.getVisibility(),
-                                        user.getStatus(),
-                                        user.getProfilePic()
-                                )
-
-                );
+                userList.add(prepareUserDTOWithVisibility(user));
             }
             return userList;
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @Override
+    public UserDTO getSpecificUserData(Integer id) {
+        try {
+            Optional<OurUsers> userById = ourUserRepo.getUserById(id);
+            if (userById.isEmpty()) throw new UserException(404, "User not found");
+
+            OurUsers user = userById.get();
+            return prepareUserDTOWithVisibility(user);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    private UserDTO prepareUserDTO(OurUsers user) {
+        /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
+          String visibility, String status, String gender, String profilePic) */
+        return new UserDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getDob(),
+                null,
+                null,
+                user.getGender(),
+                user.getRole(),
+                user.getVisibility(),
+                user.getStatus(),
+                user.getProfilePic()
+        );
+    }
+
+    private UserDTO prepareUserDTOWithVisibility(OurUsers user) {
+        return user.getVisibility().equals("PRIVATE") ? // check profile visibility
+                /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
+                        String visibility, String status, String gender, String profilePic) */
+                new UserDTO(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        user.getVisibility(),
+                        user.getStatus(),
+                        user.getProfilePic()
+                )
+                :
+                /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
+                        String visibility, String status, String gender, String profilePic) */
+                new UserDTO(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getDob(),
+                        null,
+                        null,
+                        user.getGender(),
+                        user.getRole(),
+                        user.getVisibility(),
+                        user.getStatus(),
+                        user.getProfilePic()
+                );
     }
 }

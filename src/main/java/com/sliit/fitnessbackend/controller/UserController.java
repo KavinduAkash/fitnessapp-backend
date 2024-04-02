@@ -52,4 +52,9 @@ public class UserController {
         List<UserDTO> usersList = userService.searchUsers(search);
         return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, usersList), HttpStatus.OK);
     }
+    @GetMapping("/id/{id}")
+    public ResponseEntity<CommonDataResponseDTO> getSpecificUserData(@PathVariable Integer id){
+        UserDTO user = userService.getSpecificUserData(id);
+        return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, user), HttpStatus.OK);
+    }
 }
