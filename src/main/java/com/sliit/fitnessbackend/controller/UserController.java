@@ -42,7 +42,7 @@ public class UserController {
                     ), HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(
-                    new ErrorMessageResponseDTO(true, 500, "User's profile is updated successfully!"), HttpStatus.EXPECTATION_FAILED);
+                    new ErrorMessageResponseDTO(false, 500, "Sorry! Something went wrong"), HttpStatus.EXPECTATION_FAILED);
         }
     }
 }
