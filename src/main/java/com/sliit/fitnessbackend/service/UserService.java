@@ -4,11 +4,13 @@ import com.sliit.fitnessbackend.dto.UserDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface UserService {
 
     public UserDTO getMyProfile();
     public UserDTO updateMyProfile(UserDTO userDTO);
     public UserDTO updateMyProfilePic(MultipartFile file) throws IOException;
+    public List<UserDTO> searchUsers(String search);
 
 }

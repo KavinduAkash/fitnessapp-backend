@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -44,5 +45,11 @@ public class UserController {
             return new ResponseEntity<>(
                     new ErrorMessageResponseDTO(false, 500, "Sorry! Something went wrong"), HttpStatus.EXPECTATION_FAILED);
         }
+    }
+
+    @GetMapping("/find/{search}")
+    public ResponseEntity<CommonDataResponseDTO> searchUsers(@PathVariable String search){
+        List<UserDTO> usersList = userService.searchUsers(search);
+        return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, usersList), HttpStatus.OK);
     }
 }

@@ -16,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +36,7 @@ public class UserServiceImpl implements UserService {
             System.out.println(authentication.getName());
 
             Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
-            if(byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
 
             OurUsers ourUsers = byEmail.get();
 
@@ -66,17 +68,17 @@ public class UserServiceImpl implements UserService {
             // identify user via token
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
-            if(byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
 
             // validate user's data
-            if(userDTO.getFirstName()==null || userDTO.getLastName()==null || userDTO.getEmail()==null || userDTO.getDob()==null || userDTO.getGender() == null)
+            if (userDTO.getFirstName() == null || userDTO.getLastName() == null || userDTO.getEmail() == null || userDTO.getDob() == null || userDTO.getGender() == null)
                 throw new UserException(422, "Invalid data");
 
             // get user
             OurUsers ourUsers = byEmail.get();
 
             // validate user
-            if(!userDTO.getEmail().equals(ourUsers.getEmail())) throw new UserException(401, "Unauthorized action");
+            if (!userDTO.getEmail().equals(ourUsers.getEmail())) throw new UserException(401, "Unauthorized action");
 
             // set new user data
             ourUsers.setFirstName(userDTO.getFirstName());
@@ -114,7 +116,7 @@ public class UserServiceImpl implements UserService {
             // identify user via token
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
-            if(byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
 
             // upload profile pic
             String fileName = FileManager.uploadProfilePic(file);
@@ -145,6 +147,52 @@ public class UserServiceImpl implements UserService {
             );
         } catch (IOException ex) {
             throw new FileException(400, "error");
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public List<UserDTO> searchUsers(String search) {
+        try {
+            List<UserDTO> userList = new ArrayList<>();
+            List<OurUsers> ourUsers = ourUserRepo.searchUsers(search);
+            for (OurUsers user : ourUsers) {
+                userList.add(
+                        /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
+                        String visibility, String status, String gender, String profilePic) */
+                        user.getVisibility().equals("PRIVATE") ? // check profile visibility
+                                new UserDTO(
+                                        user.getId(),
+                                        user.getFirstName(),
+                                        user.getLastName(),
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        user.getVisibility(),
+                                        user.getStatus(),
+                                        user.getProfilePic()
+                                )
+                                :
+                                new UserDTO(
+                                        user.getId(),
+                                        user.getFirstName(),
+                                        user.getLastName(),
+                                        user.getDob(),
+                                        null,
+                                        user.getGender(),
+                                        null,
+                                        user.getRole(),
+                                        user.getVisibility(),
+                                        user.getStatus(),
+                                        user.getProfilePic()
+                                )
+
+                );
+            }
+            return userList;
         } catch (Exception e) {
             throw e;
         }
