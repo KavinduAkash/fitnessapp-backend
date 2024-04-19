@@ -30,4 +30,12 @@ public class MealPlan {
         this.status = status;
         this.date = date;
     }
+
+    public MealPlan(String title, String description, boolean isCurrent, MealStatus status, Date date) {
+        this.title = title;
+        this.description = description;
+        this.isCurrent = isCurrent;
+        this.status = status;
+        this.date = date;
+    }
 }

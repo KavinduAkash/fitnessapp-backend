@@ -25,6 +25,12 @@ public class Meal {
         this.description = description;
     }
 
+    public Meal(String mealName, String description, MealPlan mealPlan) {
+        this.mealName = mealName;
+        this.description = description;
+        this.mealPlan = mealPlan;
+    }
+
     public Integer getId() {
         return id;
     }
