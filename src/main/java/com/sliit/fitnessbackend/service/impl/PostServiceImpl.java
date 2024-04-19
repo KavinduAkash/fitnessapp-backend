@@ -256,8 +256,14 @@ public class PostServiceImpl implements PostService {
             Optional<Post> byId = postRepo.findById(post);
             if(byId.isEmpty()) throw new PostException(404, "Post not found");
 
-            // PostLike(OurUsers user, Post post, Date date)
-            postLikeRepo.save(new PostLike(ourUsers, byId.get(), new Date()));
+
+            Optional<PostLike> postLikesWithUserAndPost = postLikeRepo.getPostLikesWithUserAndPost(byId.get(), ourUsers);
+            if(postLikesWithUserAndPost.isEmpty()) {
+                // PostLike(OurUsers user, Post post, Date date)
+                postLikeRepo.save(new PostLike(ourUsers, byId.get(), new Date()));
+            } else {
+                postLikeRepo.delete(postLikesWithUserAndPost.get());
+            }
 
             return true;
         } catch (Exception e) {
