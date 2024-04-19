@@ -33,5 +33,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                 new ErrorMessageResponseDTO(false, ex.getStatus(), ex.getMessage()), HttpStatus.OK);
     }
 
+    @ExceptionHandler(value = {PostException.class})
+    public ResponseEntity handlePostException(FileException ex, WebRequest webRequest) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponseDTO(false, ex.getStatus(), ex.getMessage()), HttpStatus.OK);
+    }
 
 }

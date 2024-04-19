@@ -5,11 +5,14 @@ import com.sliit.fitnessbackend.dto.PostMediaDTO;
 import com.sliit.fitnessbackend.dto.UserDTO;
 import com.sliit.fitnessbackend.entity.OurUsers;
 import com.sliit.fitnessbackend.entity.Post;
+import com.sliit.fitnessbackend.entity.PostLike;
 import com.sliit.fitnessbackend.entity.PostMedia;
 import com.sliit.fitnessbackend.enums.PostStatus;
 import com.sliit.fitnessbackend.exception.FileException;
+import com.sliit.fitnessbackend.exception.PostException;
 import com.sliit.fitnessbackend.exception.UserException;
 import com.sliit.fitnessbackend.repository.OurUserRepo;
+import com.sliit.fitnessbackend.repository.PostLikeRepo;
 import com.sliit.fitnessbackend.repository.PostMediaRepo;
 import com.sliit.fitnessbackend.repository.PostRepo;
 import com.sliit.fitnessbackend.service.PostService;
@@ -40,6 +43,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     public PostMediaRepo postMediaRepo;
+
+    @Autowired
+    public PostLikeRepo postLikeRepo;
 
     @Override
     public void addNewPost(MultipartFile file1, MultipartFile file2, MultipartFile file3, String note) {
@@ -187,6 +193,30 @@ public class PostServiceImpl implements PostService {
             }
 
             return myPostsRes;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public boolean likePosts(Integer post) {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // get user
+            OurUsers ourUsers = byEmail.get();
+
+            // get post
+            Optional<Post> byId = postRepo.findById(post);
+            if(byId.isEmpty()) throw new PostException(404, "Post not found");
+
+            // PostLike(OurUsers user, Post post, Date date)
+            postLikeRepo.save(new PostLike(ourUsers, byId.get(), new Date()));
+
+            return true;
         } catch (Exception e) {
             throw e;
         }

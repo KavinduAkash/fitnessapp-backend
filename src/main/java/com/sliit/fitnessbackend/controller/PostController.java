@@ -3,6 +3,7 @@ package com.sliit.fitnessbackend.controller;
 import com.sliit.fitnessbackend.dto.PostDTO;
 import com.sliit.fitnessbackend.dto.UserDTO;
 import com.sliit.fitnessbackend.dto.response.CommonDataResponseDTO;
+import com.sliit.fitnessbackend.dto.response.CommonResponseDTO;
 import com.sliit.fitnessbackend.dto.response.ErrorMessageResponseDTO;
 import com.sliit.fitnessbackend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,12 @@ public class PostController {
     public ResponseEntity<CommonDataResponseDTO> getFeedPosts(){
         List<PostDTO> myPosts = postService.getFeedPosts();
         return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, myPosts), HttpStatus.OK);
+    }
+
+    @PatchMapping("/like/{post}")
+    public ResponseEntity<CommonResponseDTO> likePost(@PathVariable Integer post){
+        postService.likePosts(post);
+        return new ResponseEntity<>(new CommonResponseDTO(true, "Post has been liked successfully!"), HttpStatus.OK);
     }
 
 
