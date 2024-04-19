@@ -28,15 +28,6 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity addNewPost(@RequestParam("file1") MultipartFile file1, @RequestParam("file2") MultipartFile file2, @RequestParam("file2") MultipartFile file3, @RequestParam("note") String note) {
-//        try {
-//            postService.addNewPost(file1, file2, file3, note);
-//            return new ResponseEntity<>(
-//                    new CommonDataResponseDTO<>(true, "User's profile is updated successfully!", ""
-//                    ), HttpStatus.OK);
-//        } catch (IOException e) {
-//            return new ResponseEntity<>(
-//                    new ErrorMessageResponseDTO(false, 500, "Sorry! Something went wrong"), HttpStatus.EXPECTATION_FAILED);
-//        }
         postService.addNewPost(file1, file2, file3, note);
         return new ResponseEntity<>(
                 new CommonDataResponseDTO<>(true, "User's profile is updated successfully!", ""
@@ -48,5 +39,14 @@ public class PostController {
         List<PostDTO> myPosts = postService.getMyPosts();
         return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, myPosts), HttpStatus.OK);
     }
+
+
+    @GetMapping("/feed")
+    public ResponseEntity<CommonDataResponseDTO> getFeedPosts(){
+        List<PostDTO> myPosts = postService.getFeedPosts();
+        return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, myPosts), HttpStatus.OK);
+    }
+
+
 
 }

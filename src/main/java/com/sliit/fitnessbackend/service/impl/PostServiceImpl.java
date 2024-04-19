@@ -53,15 +53,15 @@ public class PostServiceImpl implements PostService {
             ArrayList<String> images = new ArrayList<>();
 
             // upload profile pic
-            if(file1!=null) {
+            if (file1 != null) {
                 String fileName1 = FileManager.uploadProfilePic(file1);
                 images.add(fileName1);
             }
-            if(file2!=null) {
+            if (file2 != null) {
                 String fileName2 = FileManager.uploadProfilePic(file2);
                 images.add(fileName2);
             }
-            if(file3!=null) {
+            if (file3 != null) {
                 String fileName3 = FileManager.uploadProfilePic(file3);
                 images.add(fileName3);
             }
@@ -126,13 +126,61 @@ public class PostServiceImpl implements PostService {
             List<PostDTO> myPostsRes = new ArrayList<>();
             List<Post> myPosts = postRepo.getMyPosts(ourUsers);
 
-            for (Post post: myPosts) {
+            for (Post post : myPosts) {
 
                 List<PostMedia> myPostMedias = postMediaRepo.getMyPostMedias(post);
                 List<PostMediaDTO> postMediaDTOS = new ArrayList<>();
                 for (PostMedia media : myPostMedias) {
                     postMediaDTOS.add(new PostMediaDTO(media.getId(), media.getUrl()));
                 }
+
+                // new PostDTO(id, date, description, images, user);
+                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO));
+            }
+
+            return myPostsRes;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public List<PostDTO> getFeedPosts() {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // get user
+            OurUsers ourUsers = byEmail.get();
+
+
+            List<PostDTO> myPostsRes = new ArrayList<>();
+            List<Post> myPosts = postRepo.getLatestPosts();
+
+            for (Post post : myPosts) {
+
+                List<PostMedia> myPostMedias = postMediaRepo.getMyPostMedias(post);
+                List<PostMediaDTO> postMediaDTOS = new ArrayList<>();
+                for (PostMedia media : myPostMedias) {
+                    postMediaDTOS.add(new PostMediaDTO(media.getId(), media.getUrl()));
+                }
+
+                OurUsers user = post.getUser();
+                UserDTO userDTO = new UserDTO(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        user.getVisibility(),
+                        user.getStatus(),
+                        user.getProfilePic()
+                );
 
                 // new PostDTO(id, date, description, images, user);
                 myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO));
