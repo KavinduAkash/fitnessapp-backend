@@ -1,5 +1,6 @@
 package com.sliit.fitnessbackend.controller;
 
+import com.sliit.fitnessbackend.dto.CommentDTO;
 import com.sliit.fitnessbackend.dto.PostDTO;
 import com.sliit.fitnessbackend.dto.UserDTO;
 import com.sliit.fitnessbackend.dto.request.PostCommentRequestDTO;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -66,6 +68,18 @@ public class PostController {
         postService.deletePostComment(commentId);
         return new ResponseEntity<>(new CommonResponseDTO(true, "Post comment has been deleted successfully!"), HttpStatus.OK);
     }
+
+    @GetMapping("/comment/post/{postId}")
+    public ResponseEntity<CommonDataResponseDTO> getPostComment(@PathVariable Integer postId){
+//        List<CommentDTO> postCommentByPost = postService.getPostCommentByPost(postId);
+        List<CommentDTO> postCommentByPost = new ArrayList<>();
+        System.out.println("--> 6" + postCommentByPost);
+//        return new ResponseEntity<>(new CommonDataResponseDTO<>(true, "Post comment are found successfully!", postCommentByPost), HttpStatus.OK);
+//        return new ResponseEntity<>(new CommonResponseDTO(true, "Post comment has been deleted successfully!"), HttpStatus.OK);
+        return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, postCommentByPost), HttpStatus.OK);
+    }
+
+
 
 
 

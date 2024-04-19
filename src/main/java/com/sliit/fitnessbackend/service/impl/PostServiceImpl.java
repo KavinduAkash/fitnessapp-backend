@@ -1,9 +1,6 @@
 package com.sliit.fitnessbackend.service.impl;
 
-import com.sliit.fitnessbackend.dto.PostDTO;
-import com.sliit.fitnessbackend.dto.PostLikeDTO;
-import com.sliit.fitnessbackend.dto.PostMediaDTO;
-import com.sliit.fitnessbackend.dto.UserDTO;
+import com.sliit.fitnessbackend.dto.*;
 import com.sliit.fitnessbackend.dto.request.PostCommentRequestDTO;
 import com.sliit.fitnessbackend.entity.*;
 import com.sliit.fitnessbackend.enums.PostStatus;
@@ -318,7 +315,7 @@ public class PostServiceImpl implements PostService {
             OurUsers postUser = post.getUser();
 
             // check authorization
-            if(!(authUsers.equals(commentUser.getId()) || authUsers.equals(postUser.getId())))
+            if(!(authUsers.equals(commentUser) || authUsers.equals(postUser)))
                 throw new UserException(401, "Unauthorized action");
 
             // delete the comment
@@ -327,6 +324,58 @@ public class PostServiceImpl implements PostService {
             return true;
         } catch (Exception e) {
             throw e;
+        }
+    }
+
+    @Override
+    public List<CommentDTO> getPostCommentByPost(Integer postId) {
+        try {
+
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // get auth user
+            OurUsers authUsers = byEmail.get();
+
+            // find the post
+            Optional<Post> byId = postRepo.findById(postId);
+            if(byId.isEmpty())
+                throw new PostException(404, "Post not found");
+
+            // find the comments
+            List<CommentDTO> postCommentDTOs = new ArrayList<>();
+
+            System.out.println("--> 1");
+
+            List<PostComment> postCommentByPost = postCommentRepo.getPostCommentByPost(byId.get());
+
+            System.out.println("--> 2");
+            for (PostComment postComment : postCommentByPost) {
+                OurUsers user = postComment.getUser();
+                System.out.println("--> 3");
+                // CommentDTO(Integer id, Date date, String comment, UserDTO user)
+                postCommentDTOs.add(new CommentDTO(postComment.getId(), postComment.getDate(), postComment.getComment(), new UserDTO(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        user.getVisibility(),
+                        user.getStatus(),
+                        user.getProfilePic()
+                )));
+                System.out.println("--> 5");
+            }
+
+            return postCommentDTOs;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+          throw e;
         }
     }
 }
