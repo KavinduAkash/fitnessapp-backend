@@ -1,5 +1,6 @@
 package com.sliit.fitnessbackend.controller;
 
+import com.sliit.fitnessbackend.dto.PostDTO;
 import com.sliit.fitnessbackend.dto.UserDTO;
 import com.sliit.fitnessbackend.dto.response.CommonDataResponseDTO;
 import com.sliit.fitnessbackend.dto.response.ErrorMessageResponseDTO;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -40,4 +42,11 @@ public class PostController {
                 new CommonDataResponseDTO<>(true, "User's profile is updated successfully!", ""
                 ), HttpStatus.OK);
     }
+
+    @GetMapping("/my")
+    public ResponseEntity<CommonDataResponseDTO> getMyPosts(){
+        List<PostDTO> myPosts = postService.getMyPosts();
+        return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, myPosts), HttpStatus.OK);
+    }
+
 }

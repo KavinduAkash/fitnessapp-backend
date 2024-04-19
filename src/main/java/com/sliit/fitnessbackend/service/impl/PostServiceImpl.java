@@ -1,5 +1,8 @@
 package com.sliit.fitnessbackend.service.impl;
 
+import com.sliit.fitnessbackend.dto.PostDTO;
+import com.sliit.fitnessbackend.dto.PostMediaDTO;
+import com.sliit.fitnessbackend.dto.UserDTO;
 import com.sliit.fitnessbackend.entity.OurUsers;
 import com.sliit.fitnessbackend.entity.Post;
 import com.sliit.fitnessbackend.entity.PostMedia;
@@ -22,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -90,6 +94,52 @@ public class PostServiceImpl implements PostService {
             throw new FileException(400, "error");
         } catch (Exception e) {
             System.out.println("2: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public List<PostDTO> getMyPosts() {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // get user
+            OurUsers ourUsers = byEmail.get();
+
+            UserDTO userDTO = new UserDTO(
+                    ourUsers.getId(),
+                    ourUsers.getFirstName(),
+                    ourUsers.getLastName(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    ourUsers.getVisibility(),
+                    ourUsers.getStatus(),
+                    ourUsers.getProfilePic()
+            );
+
+            List<PostDTO> myPostsRes = new ArrayList<>();
+            List<Post> myPosts = postRepo.getMyPosts(ourUsers);
+
+            for (Post post: myPosts) {
+
+                List<PostMedia> myPostMedias = postMediaRepo.getMyPostMedias(post);
+                List<PostMediaDTO> postMediaDTOS = new ArrayList<>();
+                for (PostMedia media : myPostMedias) {
+                    postMediaDTOS.add(new PostMediaDTO(media.getId(), media.getUrl()));
+                }
+
+                // new PostDTO(id, date, description, images, user);
+                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO));
+            }
+
+            return myPostsRes;
+        } catch (Exception e) {
             throw e;
         }
     }
