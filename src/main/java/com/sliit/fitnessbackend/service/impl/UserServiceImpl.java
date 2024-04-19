@@ -1,5 +1,6 @@
 package com.sliit.fitnessbackend.service.impl;
 
+import com.sliit.fitnessbackend.constant.ApplicationConstant;
 import com.sliit.fitnessbackend.dto.UserDTO;
 import com.sliit.fitnessbackend.entity.OurUsers;
 import com.sliit.fitnessbackend.exception.FileException;
@@ -142,13 +143,13 @@ public class UserServiceImpl implements UserService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getDob(),
-                null,
+                user.getEmail(),
                 null,
                 user.getGender(),
                 user.getRole(),
                 user.getVisibility(),
                 user.getStatus(),
-                user.getProfilePic()
+                ApplicationConstant.IMAGE_URL + user.getProfilePic()
         );
     }
 

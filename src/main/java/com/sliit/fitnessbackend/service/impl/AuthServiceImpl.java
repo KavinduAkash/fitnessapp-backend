@@ -53,6 +53,8 @@ public class AuthServiceImpl implements AuthService {
             ourUsers.setGender(registrationRequest.getGender()); // MALE or FEMALE or OTHER
             ourUsers.setProfilePic(null);
 
+            System.out.println(ourUsers);
+
             // save user object in db
             OurUsers ourUserResult = ourUserRepo.save(ourUsers);
             if (ourUserResult != null && ourUserResult.getId()>0) {
