@@ -1,6 +1,7 @@
 package com.sliit.fitnessbackend.service;
 
 import com.sliit.fitnessbackend.dto.PostDTO;
+import com.sliit.fitnessbackend.dto.request.PostCommentRequestDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -10,4 +11,5 @@ public interface PostService {
     public List<PostDTO> getMyPosts();
     public List<PostDTO> getFeedPosts();
     public boolean likePosts(Integer post);
+    public boolean addPostComment(PostCommentRequestDTO postComment);
 }

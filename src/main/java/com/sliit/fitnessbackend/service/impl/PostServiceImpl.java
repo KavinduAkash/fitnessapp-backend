@@ -4,18 +4,13 @@ import com.sliit.fitnessbackend.dto.PostDTO;
 import com.sliit.fitnessbackend.dto.PostLikeDTO;
 import com.sliit.fitnessbackend.dto.PostMediaDTO;
 import com.sliit.fitnessbackend.dto.UserDTO;
-import com.sliit.fitnessbackend.entity.OurUsers;
-import com.sliit.fitnessbackend.entity.Post;
-import com.sliit.fitnessbackend.entity.PostLike;
-import com.sliit.fitnessbackend.entity.PostMedia;
+import com.sliit.fitnessbackend.dto.request.PostCommentRequestDTO;
+import com.sliit.fitnessbackend.entity.*;
 import com.sliit.fitnessbackend.enums.PostStatus;
 import com.sliit.fitnessbackend.exception.FileException;
 import com.sliit.fitnessbackend.exception.PostException;
 import com.sliit.fitnessbackend.exception.UserException;
-import com.sliit.fitnessbackend.repository.OurUserRepo;
-import com.sliit.fitnessbackend.repository.PostLikeRepo;
-import com.sliit.fitnessbackend.repository.PostMediaRepo;
-import com.sliit.fitnessbackend.repository.PostRepo;
+import com.sliit.fitnessbackend.repository.*;
 import com.sliit.fitnessbackend.service.PostService;
 import com.sliit.fitnessbackend.util.FileManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +42,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     public PostLikeRepo postLikeRepo;
+
+    @Autowired
+    public PostCommentRepo postCommentRepo;
 
     @Override
     public void addNewPost(MultipartFile file1, MultipartFile file2, MultipartFile file3, String note) {
@@ -264,6 +262,30 @@ public class PostServiceImpl implements PostService {
             } else {
                 postLikeRepo.delete(postLikesWithUserAndPost.get());
             }
+
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public boolean addPostComment(PostCommentRequestDTO postComment) {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // get user
+            OurUsers ourUsers = byEmail.get();
+
+            // get post
+            Optional<Post> byId = postRepo.findById(postComment.getPostId());
+            if(byId.isEmpty()) throw new PostException(404, "Post not found");
+
+            // PostComment(OurUsers user, Post post, Date date, String comment)
+            postCommentRepo.save(new PostComment(ourUsers, byId.get(), new Date(), postComment.getComment()));
 
             return true;
         } catch (Exception e) {

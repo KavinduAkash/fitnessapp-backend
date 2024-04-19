@@ -2,6 +2,7 @@ package com.sliit.fitnessbackend.controller;
 
 import com.sliit.fitnessbackend.dto.PostDTO;
 import com.sliit.fitnessbackend.dto.UserDTO;
+import com.sliit.fitnessbackend.dto.request.PostCommentRequestDTO;
 import com.sliit.fitnessbackend.dto.response.CommonDataResponseDTO;
 import com.sliit.fitnessbackend.dto.response.CommonResponseDTO;
 import com.sliit.fitnessbackend.dto.response.ErrorMessageResponseDTO;
@@ -52,6 +53,12 @@ public class PostController {
     public ResponseEntity<CommonResponseDTO> likePost(@PathVariable Integer post){
         postService.likePosts(post);
         return new ResponseEntity<>(new CommonResponseDTO(true, "Post has been liked successfully!"), HttpStatus.OK);
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<CommonResponseDTO> addPostComment(@RequestBody PostCommentRequestDTO postComment){
+        postService.addPostComment(postComment);
+        return new ResponseEntity<>(new CommonResponseDTO(true, "Post comment has been added successfully!"), HttpStatus.OK);
     }
 
 
