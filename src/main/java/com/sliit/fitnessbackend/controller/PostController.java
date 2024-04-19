@@ -61,6 +61,12 @@ public class PostController {
         return new ResponseEntity<>(new CommonResponseDTO(true, "Post comment has been added successfully!"), HttpStatus.OK);
     }
 
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseEntity<CommonResponseDTO> deletePostComment(@PathVariable Integer commentId){
+        postService.deletePostComment(commentId);
+        return new ResponseEntity<>(new CommonResponseDTO(true, "Post comment has been deleted successfully!"), HttpStatus.OK);
+    }
+
 
 
 }

@@ -12,4 +12,5 @@ public interface PostService {
     public List<PostDTO> getFeedPosts();
     public boolean likePosts(Integer post);
     public boolean addPostComment(PostCommentRequestDTO postComment);
+    public boolean deletePostComment(Integer commentId);
 }

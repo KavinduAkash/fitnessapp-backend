@@ -292,4 +292,41 @@ public class PostServiceImpl implements PostService {
             throw e;
         }
     }
+
+    @Override
+    public boolean deletePostComment(Integer commentId) {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // get auth user
+            OurUsers authUsers = byEmail.get();
+
+            // find the post
+            Optional<PostComment> byId = postCommentRepo.findById(commentId);
+            if(byId.isEmpty()) throw new PostException(404, "Comment not found");
+
+            // get comment user
+            OurUsers commentUser = byId.get().getUser();
+
+            // get the post
+            Post post = byId.get().getPost();
+
+            // get post user
+            OurUsers postUser = post.getUser();
+
+            // check authorization
+            if(!(authUsers.equals(commentUser.getId()) || authUsers.equals(postUser.getId())))
+                throw new UserException(401, "Unauthorized action");
+
+            // delete the comment
+            postCommentRepo.delete(byId.get());
+
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
