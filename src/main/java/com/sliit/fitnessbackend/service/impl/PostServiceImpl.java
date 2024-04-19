@@ -1,6 +1,7 @@
 package com.sliit.fitnessbackend.service.impl;
 
 import com.sliit.fitnessbackend.dto.PostDTO;
+import com.sliit.fitnessbackend.dto.PostLikeDTO;
 import com.sliit.fitnessbackend.dto.PostMediaDTO;
 import com.sliit.fitnessbackend.dto.UserDTO;
 import com.sliit.fitnessbackend.entity.OurUsers;
@@ -140,8 +141,29 @@ public class PostServiceImpl implements PostService {
                     postMediaDTOS.add(new PostMediaDTO(media.getId(), media.getUrl()));
                 }
 
+                List<PostLikeDTO> postLikesDTOs = new ArrayList<>();
+                List<PostLike> postLikes = postLikeRepo.getPostLikes(post);
+                for (PostLike postLike: postLikes) {
+                    OurUsers user = postLike.getUser();
+                    UserDTO userDTO2 = new UserDTO(
+                            user.getId(),
+                            user.getFirstName(),
+                            user.getLastName(),
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            user.getVisibility(),
+                            user.getStatus(),
+                            user.getProfilePic()
+                    );
+                    postLikesDTOs.add(new PostLikeDTO(postLike.getId(), postLike.getDate(), userDTO2));
+                }
+
+
                 // new PostDTO(id, date, description, images, user);
-                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO));
+                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs));
             }
 
             return myPostsRes;
@@ -173,6 +195,26 @@ public class PostServiceImpl implements PostService {
                     postMediaDTOS.add(new PostMediaDTO(media.getId(), media.getUrl()));
                 }
 
+                List<PostLikeDTO> postLikesDTOs = new ArrayList<>();
+                List<PostLike> postLikes = postLikeRepo.getPostLikes(post);
+                for (PostLike postLike: postLikes) {
+                    OurUsers user = postLike.getUser();
+                    UserDTO userDTO = new UserDTO(
+                            user.getId(),
+                            user.getFirstName(),
+                            user.getLastName(),
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            user.getVisibility(),
+                            user.getStatus(),
+                            user.getProfilePic()
+                    );
+                    postLikesDTOs.add(new PostLikeDTO(postLike.getId(), postLike.getDate(), userDTO));
+                }
+
                 OurUsers user = post.getUser();
                 UserDTO userDTO = new UserDTO(
                         user.getId(),
@@ -189,11 +231,12 @@ public class PostServiceImpl implements PostService {
                 );
 
                 // new PostDTO(id, date, description, images, user);
-                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO));
+                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs));
             }
 
             return myPostsRes;
         } catch (Exception e) {
+            System.out.println("-->" + e);
             throw e;
         }
     }

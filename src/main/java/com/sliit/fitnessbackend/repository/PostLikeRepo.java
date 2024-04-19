@@ -1,8 +1,15 @@
 package com.sliit.fitnessbackend.repository;
 
+import com.sliit.fitnessbackend.entity.OurUsers;
 import com.sliit.fitnessbackend.entity.Post;
 import com.sliit.fitnessbackend.entity.PostLike;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface PostLikeRepo extends JpaRepository<PostLike, Integer> {
+    @Query("SELECT p FROM PostLike p WHERE p.post=:post")
+    List<PostLike> getPostLikes(@Param("post") Post post);
 }
