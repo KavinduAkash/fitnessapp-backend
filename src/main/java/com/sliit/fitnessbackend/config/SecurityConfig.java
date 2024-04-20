@@ -35,6 +35,8 @@ public class SecurityConfig {
 //                        .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
 //                        .requestMatchers("/adminuser/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("USER")
+                        .requestMatchers("/post/**").hasAnyAuthority("USER")
+                        .requestMatchers("/meal/**").hasAnyAuthority("USER")
                         .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(

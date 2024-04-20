@@ -12,5 +12,5 @@ import java.util.List;
 
 public interface MealRepo extends JpaRepository<Meal, Integer> {
     @Query("SELECT m FROM Meal m WHERE m.mealPlan=:mealPlan")
-    List<PostLike> getMealByMealPlan(@Param("mealPlan") MealPlan mealPlan);
+    List<Meal> getMealByMealPlan(@Param("mealPlan") MealPlan mealPlan);
 }

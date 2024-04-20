@@ -15,5 +15,5 @@ public interface MealPlaneRepo extends JpaRepository<MealPlan, Integer> {
     List<MealPlan> getMealPlansByUser(@Param("user") OurUsers user);
 
     @Query("SELECT mp FROM MealPlan mp ORDER BY mp.date DESC")
-    List<Post> getLatestMealPlans();
+    List<MealPlan> getLatestMealPlans();
 }

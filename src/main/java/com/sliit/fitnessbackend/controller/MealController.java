@@ -1,5 +1,6 @@
 package com.sliit.fitnessbackend.controller;
 
+import com.sliit.fitnessbackend.dto.MealPlanDTO;
 import com.sliit.fitnessbackend.dto.request.MealPlanSaveRequestDTO;
 import com.sliit.fitnessbackend.dto.response.CommonDataResponseDTO;
 import com.sliit.fitnessbackend.service.MealPlanService;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -25,11 +28,19 @@ public class MealController {
                 ), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity getMealPlan(@RequestBody MealPlanSaveRequestDTO mealPlan) {
-        boolean save = mealPlanService.addMealPlan(mealPlan);
+    @GetMapping("/my")
+    public ResponseEntity getMyMealPlan() {
+        List<MealPlanDTO> mealMyPlans = mealPlanService.getMealMyPlans();
         return new ResponseEntity<>(
-                new CommonDataResponseDTO<>(true, "Meal plan created successfully!", ""
+                new CommonDataResponseDTO<>(true, "Meal plan created successfully!", mealMyPlans
+                ), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity getMealPlan() {
+        List<MealPlanDTO> mealMyPlans = mealPlanService.getMealMyPlans();
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "Meal plan created successfully!", mealMyPlans
                 ), HttpStatus.OK);
     }
 }
