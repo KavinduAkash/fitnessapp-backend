@@ -1,6 +1,7 @@
 package com.sliit.fitnessbackend.service.impl;
 
 import com.sliit.fitnessbackend.dto.MealDTO;
+import com.sliit.fitnessbackend.dto.MealPlanDTO;
 import com.sliit.fitnessbackend.dto.request.MealPlanSaveRequestDTO;
 import com.sliit.fitnessbackend.entity.Meal;
 import com.sliit.fitnessbackend.entity.MealPlan;
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,7 +45,7 @@ public class MealPlanServiceImpl implements MealPlanService {
             OurUsers authUsers = byEmail.get();
 
             // MealPlan(String title, String description, boolean isCurrent, MealStatus status, Date date)
-            MealPlan save = mealPlaneRepo.save(new MealPlan(mealPlan.getTitle(), mealPlan.getDescription(), mealPlan.isCurrent(), MealStatus.ACTIVE, new Date()));
+            MealPlan save = mealPlaneRepo.save(new MealPlan(mealPlan.getTitle(), mealPlan.getDescription(), mealPlan.isCurrent(), MealStatus.ACTIVE, authUsers, new Date()));
 
             for (MealDTO meal : mealPlan.getMeals()) {
                 // Meal(String mealName, String description, MealPlan mealPlan)
@@ -54,5 +56,33 @@ public class MealPlanServiceImpl implements MealPlanService {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @Override
+    public List<MealPlanDTO> getMealMyPlans() {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // get auth user
+            OurUsers authUsers = byEmail.get();
+
+            List<MealPlan> mealPlansByUser = mealPlaneRepo.getMealPlansByUser(authUsers);
+            for (MealPlan mealPlan : mealPlansByUser) {
+//                mealRepo.get
+            }
+
+            return null;
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public List<MealPlanDTO> getMealPlans() {
+        return null;
     }
 }

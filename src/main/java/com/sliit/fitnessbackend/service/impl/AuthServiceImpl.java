@@ -1,10 +1,11 @@
-package com.sliit.fitnessbackend.service;
+package com.sliit.fitnessbackend.service.impl;
 
 import com.sliit.fitnessbackend.dto.ReqRes;
 import com.sliit.fitnessbackend.dto.request.UserSignUpRequestDTO;
 import com.sliit.fitnessbackend.entity.OurUsers;
 import com.sliit.fitnessbackend.exception.UserException;
 import com.sliit.fitnessbackend.repository.OurUserRepo;
+import com.sliit.fitnessbackend.service.AuthService;
 import com.sliit.fitnessbackend.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

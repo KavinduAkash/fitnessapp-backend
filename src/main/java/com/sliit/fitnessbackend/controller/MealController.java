@@ -24,4 +24,12 @@ public class MealController {
                 new CommonDataResponseDTO<>(true, "Meal plan created successfully!", ""
                 ), HttpStatus.OK);
     }
+
+    @GetMapping
+    public ResponseEntity getMealPlan(@RequestBody MealPlanSaveRequestDTO mealPlan) {
+        boolean save = mealPlanService.addMealPlan(mealPlan);
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "Meal plan created successfully!", ""
+                ), HttpStatus.OK);
+    }
 }
