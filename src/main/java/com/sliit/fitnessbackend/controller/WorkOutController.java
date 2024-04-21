@@ -28,7 +28,7 @@ public class WorkOutController {
                 ), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/exercise")
     public ResponseEntity createExercise(@RequestBody ExcersiceDTO exercise) {
         boolean save = workOutService.addNewExercise(exercise);
         return new ResponseEntity<>(
