@@ -1,0 +1,14 @@
+package com.sliit.fitnessbackend.enums;
+
+public enum ExcersiceType {
+    CARDIO,
+    STRENGTH_TRAINING,
+    FLEXIBILITY_MOBILITY,
+    HIIT,
+    FUNCTIONAL_TRAINING,
+    MIND_BODY,
+    GROUP_FITNESS_CLASSES,
+    SPORTS_SPECIFIC,
+    OUTDOOR_ACTIVITIES,
+    RECOVERY_REGENERATION
+}
