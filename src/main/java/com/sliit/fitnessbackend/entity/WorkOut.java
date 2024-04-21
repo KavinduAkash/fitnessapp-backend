@@ -39,6 +39,15 @@ public class WorkOut {
         this.status = status;
     }
 
+    public WorkOut(String title, String description, OurUsers user, Date date, boolean isCurrent, WorkOutStatus status) {
+        this.title = title;
+        this.description = description;
+        this.user = user;
+        this.date = date;
+        this.isCurrent = isCurrent;
+        this.status = status;
+    }
+
     public Integer getId() {
         return id;
     }
