@@ -1,5 +1,6 @@
 package com.sliit.fitnessbackend.service.impl;
 
+import com.sliit.fitnessbackend.dto.WorkOutDTO;
 import com.sliit.fitnessbackend.dto.WorkOutExcersiceDTO;
 import com.sliit.fitnessbackend.dto.request.WorkoutSaveRequestDTO;
 import com.sliit.fitnessbackend.entity.Excersice;
@@ -23,7 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,7 +48,6 @@ public class WorkOutServiceImpl implements WorkOutService {
     @Override
     public boolean addNewWorkOut(WorkoutSaveRequestDTO workout) {
         try {
-
             // identify user via token
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
@@ -68,6 +70,44 @@ public class WorkOutServiceImpl implements WorkOutService {
 
             return true;
 
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public List<WorkOutDTO> getMyWorkOut() {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // get user
+            OurUsers ourUsers = byEmail.get();
+
+            List<WorkOutDTO> workOutDTOS = new ArrayList<>();
+            List<WorkOut> workoutByUser = workoutRepo.getWorkoutByUser(ourUsers);
+            for (WorkOut w : workoutByUser) {
+                // WorkOutDTO(Integer id, String title, String description, boolean isCurrent, List<WorkOutExcersiceDTO> exercises)
+                workOutDTOS.add(new WorkOutDTO(w.getId(), w.getTitle(), w.getDescription(), w.isCurrent(), new ArrayList<>()));
+            }
+            return  workOutDTOS;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public List<WorkOutDTO> getWorkOut() {
+        try {
+            List<WorkOutDTO> workOutDTOS = new ArrayList<>();
+            List<WorkOut> workoutByUser = workoutRepo.findAll();
+            for (WorkOut w : workoutByUser) {
+                // WorkOutDTO(Integer id, String title, String description, boolean isCurrent, List<WorkOutExcersiceDTO> exercises)
+                workOutDTOS.add(new WorkOutDTO(w.getId(), w.getTitle(), w.getDescription(), w.isCurrent(), new ArrayList<>()));
+            }
+            return  workOutDTOS;
         } catch (Exception e) {
             throw e;
         }
