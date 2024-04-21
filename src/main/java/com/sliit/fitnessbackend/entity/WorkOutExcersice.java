@@ -28,6 +28,12 @@ public class WorkOutExcersice {
         this.value = value;
     }
 
+    public WorkOutExcersice(WorkOut workOut, Excersice excersice, String value) {
+        this.workOut = workOut;
+        this.excersice = excersice;
+        this.value = value;
+    }
+
     public Integer getId() {
         return id;
     }
