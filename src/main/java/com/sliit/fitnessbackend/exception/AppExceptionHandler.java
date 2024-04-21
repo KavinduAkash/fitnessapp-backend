@@ -45,4 +45,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                 new ErrorMessageResponseDTO(false, ex.getStatus(), ex.getMessage()), HttpStatus.OK);
     }
 
+    @ExceptionHandler(value = {WorkOutException.class})
+    public ResponseEntity handleWorkOutException(WorkOutException ex, WebRequest webRequest) {
+        return new ResponseEntity<>(
+                new ErrorMessageResponseDTO(false, ex.getStatus(), ex.getMessage()), HttpStatus.OK);
+    }
+
 }
