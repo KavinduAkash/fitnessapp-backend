@@ -2,6 +2,7 @@ package com.sliit.fitnessbackend.controller;
 
 import com.sliit.fitnessbackend.dto.MealPlanDTO;
 import com.sliit.fitnessbackend.dto.request.MealPlanSaveRequestDTO;
+import com.sliit.fitnessbackend.dto.request.MealPlanUpdateRequestDTO;
 import com.sliit.fitnessbackend.dto.response.CommonDataResponseDTO;
 import com.sliit.fitnessbackend.service.MealPlanService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,22 @@ public class MealController {
         List<MealPlanDTO> mealMyPlans = mealPlanService.getMealMyPlans();
         return new ResponseEntity<>(
                 new CommonDataResponseDTO<>(true, "Meal plan created successfully!", mealMyPlans
+                ), HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity updateMealPlan(@RequestBody MealPlanUpdateRequestDTO mealPlan) {
+        boolean save = mealPlanService.updateMealPlan(mealPlan);
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "Meal plan is updated successfully!", ""
+                ), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{mealPlanId}")
+    public ResponseEntity deleteMealPlan(@PathVariable Integer mealPlanId) {
+        boolean save = mealPlanService.deleteMealPlan(mealPlanId);
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "Meal plan is deleted successfully!", ""
                 ), HttpStatus.OK);
     }
 }
