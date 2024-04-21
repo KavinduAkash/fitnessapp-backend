@@ -1,5 +1,6 @@
 package com.sliit.fitnessbackend.service.impl;
 
+import com.sliit.fitnessbackend.dto.ExcersiceDTO;
 import com.sliit.fitnessbackend.dto.WorkOutDTO;
 import com.sliit.fitnessbackend.dto.WorkOutExcersiceDTO;
 import com.sliit.fitnessbackend.dto.request.WorkoutSaveRequestDTO;
@@ -70,6 +71,23 @@ public class WorkOutServiceImpl implements WorkOutService {
 
             return true;
 
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public boolean addNewExercise(ExcersiceDTO exercise) {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // Excersice(String name, ExcersiceType type, ExcersiceValues value)
+            excersiceRepo.save(new Excersice(exercise.getName(), exercise.getType(), exercise.getValue()));
+
+            return true;
         } catch (Exception e) {
             throw e;
         }

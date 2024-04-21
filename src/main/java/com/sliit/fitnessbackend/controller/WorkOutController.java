@@ -1,5 +1,6 @@
 package com.sliit.fitnessbackend.controller;
 
+import com.sliit.fitnessbackend.dto.ExcersiceDTO;
 import com.sliit.fitnessbackend.dto.WorkOutDTO;
 import com.sliit.fitnessbackend.dto.request.MealPlanSaveRequestDTO;
 import com.sliit.fitnessbackend.dto.request.WorkoutSaveRequestDTO;
@@ -24,6 +25,14 @@ public class WorkOutController {
         boolean save = workOutService.addNewWorkOut(workout);
         return new ResponseEntity<>(
                 new CommonDataResponseDTO<>(true, "Workout plan created successfully!", ""
+                ), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity createExercise(@RequestBody ExcersiceDTO exercise) {
+        boolean save = workOutService.addNewExercise(exercise);
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "Exercise created successfully!", ""
                 ), HttpStatus.OK);
     }
 
