@@ -112,4 +112,29 @@ public class WorkOutServiceImpl implements WorkOutService {
             throw e;
         }
     }
+
+    @Override
+    public boolean deleteWorkOut(Integer id) {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // get user
+            OurUsers ourUsers = byEmail.get();
+
+            Optional<WorkOut> byId = workoutRepo.findById(id);
+            if(byId.isEmpty()) throw new WorkOutException(404, "Workout not found");
+
+            WorkOut workOut = byId.get();
+            workOut.setStatus(WorkOutStatus.DELETED);
+
+            workoutRepo.save(workOut);
+
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }

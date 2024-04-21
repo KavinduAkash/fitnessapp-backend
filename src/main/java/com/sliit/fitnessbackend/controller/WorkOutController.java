@@ -42,4 +42,12 @@ public class WorkOutController {
                 new CommonDataResponseDTO<>(true, "", save
                 ), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{workoutId}")
+    public ResponseEntity getWorkOut(@PathVariable Integer workoutId) {
+        boolean b = workOutService.deleteWorkOut(workoutId);
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "Workout deleted successfully!", ""
+                ), HttpStatus.OK);
+    }
 }

@@ -9,4 +9,5 @@ public interface WorkOutService {
     public boolean addNewWorkOut(WorkoutSaveRequestDTO workout);
     public List<WorkOutDTO> getMyWorkOut();
     public List<WorkOutDTO> getWorkOut();
+    public boolean deleteWorkOut(Integer id);
 }
