@@ -2,9 +2,12 @@ package com.sliit.fitnessbackend.service.impl;
 
 import com.sliit.fitnessbackend.constant.ApplicationConstant;
 import com.sliit.fitnessbackend.dto.UserDTO;
+import com.sliit.fitnessbackend.dto.request.FollowerRequestDTO;
+import com.sliit.fitnessbackend.entity.Follower;
 import com.sliit.fitnessbackend.entity.OurUsers;
 import com.sliit.fitnessbackend.exception.FileException;
 import com.sliit.fitnessbackend.exception.UserException;
+import com.sliit.fitnessbackend.repository.FollowerRepo;
 import com.sliit.fitnessbackend.repository.OurUserRepo;
 import com.sliit.fitnessbackend.service.UserService;
 import com.sliit.fitnessbackend.util.FileManager;
@@ -27,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     public OurUserRepo ourUserRepo;
+
+    @Autowired
+    public FollowerRepo followerRepo;
 
     @Override
     public UserDTO getMyProfile() {
@@ -130,6 +136,29 @@ public class UserServiceImpl implements UserService {
 
             OurUsers user = userById.get();
             return prepareUserDTOWithVisibility(user);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public boolean followUser(FollowerRequestDTO follow) {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+            OurUsers user = byEmail.get();
+
+            // check follower
+            Optional<OurUsers> userById = ourUserRepo.getUserById(follow.getFollowerId());
+            if (userById.isEmpty()) throw new UserException(404, "User not found");
+            OurUsers follower = userById.get();
+
+            // save follower
+            followerRepo.save(new Follower(user, follower, new Date()));
+
+            return true;
         } catch (Exception e) {
             throw e;
         }

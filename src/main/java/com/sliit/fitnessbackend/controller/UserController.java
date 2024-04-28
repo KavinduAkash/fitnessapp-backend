@@ -1,6 +1,7 @@
 package com.sliit.fitnessbackend.controller;
 
 import com.sliit.fitnessbackend.dto.UserDTO;
+import com.sliit.fitnessbackend.dto.request.FollowerRequestDTO;
 import com.sliit.fitnessbackend.dto.request.UserSignUpRequestDTO;
 import com.sliit.fitnessbackend.dto.response.CommonDataResponseDTO;
 import com.sliit.fitnessbackend.dto.response.CommonResponseDTO;
@@ -58,4 +59,13 @@ public class UserController {
         UserDTO user = userService.getSpecificUserData(id);
         return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, user), HttpStatus.OK);
     }
+
+    @PatchMapping("/follow")
+    public ResponseEntity followUsers(@RequestBody FollowerRequestDTO follow) {
+        boolean result = userService.followUser(follow);
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "You followed the user successfully!", null
+                ), HttpStatus.OK);
+    }
+
 }
