@@ -1,6 +1,7 @@
 package com.sliit.fitnessbackend.service.impl;
 
 import com.sliit.fitnessbackend.dto.ReqRes;
+import com.sliit.fitnessbackend.dto.request.ResetPasswordRequestDTO;
 import com.sliit.fitnessbackend.dto.request.UserSignUpRequestDTO;
 import com.sliit.fitnessbackend.entity.OurUsers;
 import com.sliit.fitnessbackend.exception.UserException;
@@ -10,6 +11,8 @@ import com.sliit.fitnessbackend.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -108,5 +111,26 @@ public class AuthServiceImpl implements AuthService {
         }
         response.setStatusCode(500);
         return response;
+    }
+
+    @Override
+    public boolean resetPassword(ResetPasswordRequestDTO passwordReset) {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+            OurUsers user = byEmail.get();
+
+            // set password
+            user.setPassword(passwordEncoder.encode(passwordReset.getPassword()));
+
+            // save user
+            ourUserRepo.save(user);
+
+            return true;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 }

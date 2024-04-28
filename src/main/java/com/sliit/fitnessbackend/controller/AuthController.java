@@ -1,7 +1,9 @@
 package com.sliit.fitnessbackend.controller;
 
 import com.sliit.fitnessbackend.dto.ReqRes;
+import com.sliit.fitnessbackend.dto.request.ResetPasswordRequestDTO;
 import com.sliit.fitnessbackend.dto.request.UserSignUpRequestDTO;
+import com.sliit.fitnessbackend.dto.response.CommonDataResponseDTO;
 import com.sliit.fitnessbackend.dto.response.CommonResponseDTO;
 import com.sliit.fitnessbackend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +33,13 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes refreshTokenRequest){
         return ResponseEntity.ok(authService.refreshToken(refreshTokenRequest));
+    }
+
+    @PostMapping("/reset")
+    public ResponseEntity<CommonDataResponseDTO> resetPassword(@RequestBody ResetPasswordRequestDTO passwordReset){
+        boolean result = authService.resetPassword(passwordReset);
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "Password is reset successfully!", null
+                ), HttpStatus.OK);
     }
 }
