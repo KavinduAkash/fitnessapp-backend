@@ -15,5 +15,6 @@ public interface UserService {
     public List<UserDTO> searchUsers(String search);
     public UserDTO getSpecificUserData(Integer id);
     public boolean followUser(FollowerRequestDTO follow);
+    public List<UserDTO> getUsers(String search);
 
 }

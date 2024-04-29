@@ -16,6 +16,8 @@ public class UserDTO {
     private String visibility; // PUBLIC or PRIVATE
     private String status; // ACTIVE or DELETED
     private String profilePic;
+    private boolean isFollowing;
+    private boolean isFollower;
 
     public UserDTO() {
     }
@@ -33,6 +35,22 @@ public class UserDTO {
         this.visibility = visibility;
         this.status = status;
         this.profilePic = profilePic;
+    }
+
+    public UserDTO(Integer id, String firstName, String lastName, Date dob, String email, String password, String gender, String role, String visibility, String status, String profilePic, boolean isFollowing, boolean isFollower) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.email = email;
+        this.password = password;
+        this.gender = gender;
+        this.role = role;
+        this.visibility = visibility;
+        this.status = status;
+        this.profilePic = profilePic;
+        this.isFollowing = isFollowing;
+        this.isFollower = isFollower;
     }
 
     public Integer getId() {
@@ -123,6 +141,22 @@ public class UserDTO {
         this.gender = gender;
     }
 
+    public boolean isFollowing() {
+        return isFollowing;
+    }
+
+    public void setFollowing(boolean following) {
+        isFollowing = following;
+    }
+
+    public boolean isFollower() {
+        return isFollower;
+    }
+
+    public void setFollower(boolean follower) {
+        isFollower = follower;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -137,6 +171,8 @@ public class UserDTO {
                 ", visibility='" + visibility + '\'' +
                 ", status='" + status + '\'' +
                 ", profilePic='" + profilePic + '\'' +
+                ", isFollowing=" + isFollowing +
+                ", isFollower=" + isFollower +
                 '}';
     }
 }

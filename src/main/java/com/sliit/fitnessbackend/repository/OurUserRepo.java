@@ -14,4 +14,7 @@ public interface OurUserRepo extends JpaRepository<OurUsers, Integer> {
     Optional<OurUsers> findByEmail(String email);
     @Query("SELECT u FROM OurUsers u WHERE LOWER(u.firstName) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :search, '%'))")
     List<OurUsers> searchUsers(@Param("search") String search);
+
+    @Query("SELECT u FROM OurUsers u WHERE (:search IS NULL OR (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :search, '%')) OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :search, '%'))))")
+    List<OurUsers> searchUsers2(@Param("search") String search);
 }

@@ -117,10 +117,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> searchUsers(String search) {
         try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+            OurUsers user = byEmail.get();
+
             List<UserDTO> userList = new ArrayList<>();
             List<OurUsers> ourUsers = ourUserRepo.searchUsers(search);
-            for (OurUsers user : ourUsers) {
-                userList.add(prepareUserDTOWithVisibility(user));
+            for (OurUsers user1 : ourUsers) {
+                userList.add(prepareUserDTOWithVisibility(user1, user));
             }
             return userList;
         } catch (Exception e) {
@@ -131,11 +137,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getSpecificUserData(Integer id) {
         try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+            OurUsers user = byEmail.get();
+
             Optional<OurUsers> userById = ourUserRepo.getUserById(id);
             if (userById.isEmpty()) throw new UserException(404, "User not found");
 
-            OurUsers user = userById.get();
-            return prepareUserDTOWithVisibility(user);
+            OurUsers user1 = userById.get();
+            return prepareUserDTOWithVisibility(user1, user);
         } catch (Exception e) {
             throw e;
         }
@@ -164,6 +176,26 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public List<UserDTO> getUsers(String search) {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+            OurUsers user = byEmail.get();
+
+            List<UserDTO> userList = new ArrayList<>();
+            List<OurUsers> ourUsers = ourUserRepo.searchUsers2(search);
+            for (OurUsers user1 : ourUsers) {
+                userList.add(prepareUserDTOWithVisibility(user1, user));
+            }
+            return userList;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     private UserDTO prepareUserDTO(OurUsers user) {
         /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
           String visibility, String status, String gender, String profilePic) */
@@ -182,7 +214,11 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    private UserDTO prepareUserDTOWithVisibility(OurUsers user) {
+    private UserDTO prepareUserDTOWithVisibility(OurUsers user, OurUsers myAccount) {
+
+        Optional<Follower> follower = followerRepo.myFollower(myAccount, user);
+        Optional<Follower> followering = followerRepo.myFollowing(myAccount, user);
+
         return user.getVisibility().equals("PRIVATE") ? // check profile visibility
                 /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
                         String visibility, String status, String gender, String profilePic) */
@@ -197,7 +233,9 @@ public class UserServiceImpl implements UserService {
                         null,
                         user.getVisibility(),
                         user.getStatus(),
-                        user.getProfilePic()
+                        user.getProfilePic(),
+                        !follower.isEmpty(),
+                        !followering.isEmpty()
                 )
                 :
                 /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
@@ -213,7 +251,9 @@ public class UserServiceImpl implements UserService {
                         user.getRole(),
                         user.getVisibility(),
                         user.getStatus(),
-                        user.getProfilePic()
+                        user.getProfilePic(),
+                        !follower.isEmpty(),
+                        !followering.isEmpty()
                 );
     }
 }
