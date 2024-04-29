@@ -68,7 +68,7 @@ public class UserController {
                 ), HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<CommonDataResponseDTO> getUsers(@RequestParam("search") String search){
         List<UserDTO> user = userService.getUsers(search);
         return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, user), HttpStatus.OK);
