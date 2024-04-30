@@ -219,7 +219,9 @@ public class UserServiceImpl implements UserService {
         Optional<Follower> follower = followerRepo.myFollower(myAccount, user);
         Optional<Follower> followering = followerRepo.myFollowing(myAccount, user);
 
-        return user.getVisibility().equals("PRIVATE") ? // check profile visibility
+        boolean isMyProfile = user.getId() == myAccount.getId();
+
+        return user.getVisibility().equals("PRIVATE") & !isMyProfile ? // check profile visibility
                 /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
                         String visibility, String status, String gender, String profilePic) */
                 new UserDTO(
@@ -235,9 +237,12 @@ public class UserServiceImpl implements UserService {
                         user.getStatus(),
                         user.getProfilePic(),
                         !follower.isEmpty(),
-                        !followering.isEmpty()
+                        !followering.isEmpty(),
+                        isMyProfile
                 )
                 :
+
+                !isMyProfile ?
                 /* OurUsers(Integer id, String firstName, String lastName, Date dob, String email, String password, String role,
                         String visibility, String status, String gender, String profilePic) */
                 new UserDTO(
@@ -253,7 +258,25 @@ public class UserServiceImpl implements UserService {
                         user.getStatus(),
                         user.getProfilePic(),
                         !follower.isEmpty(),
-                        !followering.isEmpty()
-                );
+                        !followering.isEmpty(),
+                        isMyProfile
+                ):
+                        new UserDTO(
+                                user.getId(),
+                                user.getFirstName(),
+                                user.getLastName(),
+                                user.getDob(),
+                                user.getEmail(),
+                                null,
+                                user.getGender(),
+                                user.getRole(),
+                                user.getVisibility(),
+                                user.getStatus(),
+                                user.getProfilePic(),
+                                !follower.isEmpty(),
+                                !followering.isEmpty(),
+                                isMyProfile
+                        )
+                ;
     }
 }

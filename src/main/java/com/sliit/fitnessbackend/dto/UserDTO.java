@@ -19,6 +19,8 @@ public class UserDTO {
     private boolean isFollowing;
     private boolean isFollower;
 
+    private boolean isMyProfile;
+
     public UserDTO() {
     }
 
@@ -37,7 +39,7 @@ public class UserDTO {
         this.profilePic = profilePic;
     }
 
-    public UserDTO(Integer id, String firstName, String lastName, Date dob, String email, String password, String gender, String role, String visibility, String status, String profilePic, boolean isFollowing, boolean isFollower) {
+    public UserDTO(Integer id, String firstName, String lastName, Date dob, String email, String password, String gender, String role, String visibility, String status, String profilePic, boolean isFollowing, boolean isFollower, boolean isMyProfile) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -51,6 +53,7 @@ public class UserDTO {
         this.profilePic = profilePic;
         this.isFollowing = isFollowing;
         this.isFollower = isFollower;
+        this.isMyProfile = isMyProfile;
     }
 
     public Integer getId() {
@@ -157,6 +160,14 @@ public class UserDTO {
         isFollower = follower;
     }
 
+    public boolean isMyProfile() {
+        return isMyProfile;
+    }
+
+    public void setMyProfile(boolean myProfile) {
+        isMyProfile = myProfile;
+    }
+
     @Override
     public String toString() {
         return "UserDTO{" +
@@ -173,6 +184,7 @@ public class UserDTO {
                 ", profilePic='" + profilePic + '\'' +
                 ", isFollowing=" + isFollowing +
                 ", isFollower=" + isFollower +
+                ", isMyProfile=" + isMyProfile +
                 '}';
     }
 }
