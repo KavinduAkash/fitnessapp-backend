@@ -74,4 +74,12 @@ public class UserController {
         return new ResponseEntity<>(new CommonDataResponseDTO<>(true, null, user), HttpStatus.OK);
     }
 
+    @DeleteMapping("/my")
+    public ResponseEntity<CommonDataResponseDTO> deleteAccount() {
+        boolean result = userService.deleteMyProfile();
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "User's profile is deleted successfully!", ""
+                ), HttpStatus.OK);
+    }
+
 }

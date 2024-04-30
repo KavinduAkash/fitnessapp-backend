@@ -11,6 +11,7 @@ import com.sliit.fitnessbackend.repository.FollowerRepo;
 import com.sliit.fitnessbackend.repository.OurUserRepo;
 import com.sliit.fitnessbackend.service.UserService;
 import com.sliit.fitnessbackend.util.FileManager;
+import com.sliit.fitnessbackend.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -81,6 +82,26 @@ public class UserServiceImpl implements UserService {
             OurUsers save = ourUserRepo.save(ourUsers);
 
             return prepareUserDTO(save);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public boolean deleteMyProfile() {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            OurUsers ourUsers = byEmail.get();
+            ourUsers.setEmail(ourUsers.getEmail() + "_deleted_" + RandomUtil.genRandomString());
+            ourUsers.setStatus("DELETED");
+
+            ourUserRepo.save(ourUsers);
+
+            return true;
         } catch (Exception e) {
             throw e;
         }

@@ -11,6 +11,7 @@ public interface UserService {
 
     public UserDTO getMyProfile();
     public UserDTO updateMyProfile(UserDTO userDTO);
+    public boolean deleteMyProfile();
     public UserDTO updateMyProfilePic(MultipartFile file) throws IOException;
     public List<UserDTO> searchUsers(String search);
     public UserDTO getSpecificUserData(Integer id);
