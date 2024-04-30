@@ -147,6 +147,9 @@ public class UserServiceImpl implements UserService {
             if (userById.isEmpty()) throw new UserException(404, "User not found");
 
             OurUsers user1 = userById.get();
+
+            System.out.println("here 1");
+
             return prepareUserDTOWithVisibility(user1, user);
         } catch (Exception e) {
             throw e;
@@ -167,8 +170,16 @@ public class UserServiceImpl implements UserService {
             if (userById.isEmpty()) throw new UserException(404, "User not found");
             OurUsers follower = userById.get();
 
-            // save follower
-            followerRepo.save(new Follower(user, follower, new Date()));
+            // check record
+            Optional<Follower> follower1 = followerRepo.myFollowing(user, follower);
+
+            if(follower1.isEmpty()) {
+                // save follower
+                followerRepo.save(new Follower(follower, user, new Date()));
+            } else {
+                // remove follower
+                followerRepo.delete(follower1.get());
+            }
 
             return true;
         } catch (Exception e) {
@@ -236,8 +247,8 @@ public class UserServiceImpl implements UserService {
                         user.getVisibility(),
                         user.getStatus(),
                         user.getProfilePic(),
-                        !follower.isEmpty(),
                         !followering.isEmpty(),
+                        !follower.isEmpty(),
                         isMyProfile
                 )
                 :
@@ -257,8 +268,8 @@ public class UserServiceImpl implements UserService {
                         user.getVisibility(),
                         user.getStatus(),
                         user.getProfilePic(),
-                        !follower.isEmpty(),
                         !followering.isEmpty(),
+                        !follower.isEmpty(),
                         isMyProfile
                 ):
                         new UserDTO(
@@ -273,8 +284,8 @@ public class UserServiceImpl implements UserService {
                                 user.getVisibility(),
                                 user.getStatus(),
                                 user.getProfilePic(),
-                                !follower.isEmpty(),
                                 !followering.isEmpty(),
+                                !follower.isEmpty(),
                                 isMyProfile
                         )
                 ;
