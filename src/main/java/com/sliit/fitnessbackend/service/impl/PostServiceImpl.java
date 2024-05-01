@@ -10,6 +10,7 @@ import com.sliit.fitnessbackend.exception.UserException;
 import com.sliit.fitnessbackend.repository.*;
 import com.sliit.fitnessbackend.service.PostService;
 import com.sliit.fitnessbackend.util.FileManager;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -160,9 +161,35 @@ public class PostServiceImpl implements PostService {
                     postLikesDTOs.add(new PostLikeDTO(postLike.getId(), postLike.getDate(), userDTO2));
                 }
 
+                List<PostCommentDTO> postCommentDTOs = new ArrayList<>();
+                List<PostComment> postComments = postCommentRepo.getPostCommentByPost(post);
+                for (PostComment postComment: postComments) {
+                    OurUsers user = postComment.getUser();
+                    UserDTO userDTO3 = new UserDTO(
+                            user.getId(),
+                            user.getFirstName(),
+                            user.getLastName(),
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            user.getVisibility(),
+                            user.getStatus(),
+                            user.getProfilePic()
+                    );
+
+                    postCommentDTOs.add(new PostCommentDTO(
+                            postComment.getId(),
+                            post.getId(),
+                            postComment.getComment(),
+                            userDTO3,
+                            postComment.getDate()
+                    ));
+                }
 
                 // new PostDTO(id, date, description, images, user);
-                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs));
+                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs, postCommentDTOs));
             }
 
             return myPostsRes;
@@ -214,6 +241,35 @@ public class PostServiceImpl implements PostService {
                     postLikesDTOs.add(new PostLikeDTO(postLike.getId(), postLike.getDate(), userDTO));
                 }
 
+                List<PostCommentDTO> postCommentDTOs = new ArrayList<>();
+                List<PostComment> postComments = postCommentRepo.getPostCommentByPost(post);
+                for (PostComment postComment: postComments) {
+                    OurUsers user = postComment.getUser();
+                    UserDTO userDTO = new UserDTO(
+                            user.getId(),
+                            user.getFirstName(),
+                            user.getLastName(),
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            user.getVisibility(),
+                            user.getStatus(),
+                            user.getProfilePic()
+                    );
+
+                    Date date = postComment.getDate();
+
+                    postCommentDTOs.add(new PostCommentDTO(
+                            postComment.getId(),
+                            post.getId(),
+                            postComment.getComment(),
+                            userDTO,
+                            date
+                    ));
+                }
+
                 OurUsers user = post.getUser();
                 UserDTO userDTO = new UserDTO(
                         user.getId(),
@@ -230,7 +286,7 @@ public class PostServiceImpl implements PostService {
                 );
 
                 // new PostDTO(id, date, description, images, user);
-                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs));
+                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs, postCommentDTOs));
             }
 
             return myPostsRes;

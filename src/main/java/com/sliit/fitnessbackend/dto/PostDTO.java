@@ -10,15 +10,17 @@ public class PostDTO {
     private List<PostMediaDTO> images;
     private UserDTO user;
     private List<PostLikeDTO> likes;
+    private List<PostCommentDTO> comments;
 
 
-    public PostDTO(Integer id, Date date, String description, List<PostMediaDTO> images, UserDTO user, List<PostLikeDTO> likes) {
+    public PostDTO(Integer id, Date date, String description, List<PostMediaDTO> images, UserDTO user, List<PostLikeDTO> likes, List<PostCommentDTO> comments) {
         this.id = id;
         this.date = date;
         this.description = description;
         this.images = images;
         this.user = user;
         this.likes = likes;
+        this.comments = comments;
     }
 
     public Integer getId() {
@@ -69,6 +71,14 @@ public class PostDTO {
         this.likes = likes;
     }
 
+    public List<PostCommentDTO> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<PostCommentDTO> comments) {
+        this.comments = comments;
+    }
+
     @Override
     public String toString() {
         return "PostDTO{" +
@@ -78,6 +88,7 @@ public class PostDTO {
                 ", images=" + images +
                 ", user=" + user +
                 ", likes=" + likes +
+                ", comments=" + comments +
                 '}';
     }
 }
