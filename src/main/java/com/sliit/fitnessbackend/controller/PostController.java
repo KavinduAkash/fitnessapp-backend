@@ -31,8 +31,12 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity addNewPost(@RequestParam("file1") MultipartFile file1, @RequestParam("file2") MultipartFile file2, @RequestParam("file2") MultipartFile file3, @RequestParam("note") String note) {
-        postService.addNewPost(file1, file2, file3, note);
+    public ResponseEntity addNewPost(@RequestParam(value = "file1", required = false) MultipartFile file1,
+                                     @RequestParam(value = "file2", required = false) MultipartFile file2,
+                                     @RequestParam(value = "file3", required = false) MultipartFile file3,
+                                     @RequestParam(value = "file4", required = false) MultipartFile file4,
+                                     @RequestParam("note") String note) {
+        postService.addNewPost(file1, file2, file3, file4, note);
         return new ResponseEntity<>(
                 new CommonDataResponseDTO<>(true, "User's profile is updated successfully!", ""
                 ), HttpStatus.OK);

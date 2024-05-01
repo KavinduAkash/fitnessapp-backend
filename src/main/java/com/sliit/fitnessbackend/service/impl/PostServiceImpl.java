@@ -44,7 +44,7 @@ public class PostServiceImpl implements PostService {
     public PostCommentRepo postCommentRepo;
 
     @Override
-    public void addNewPost(MultipartFile file1, MultipartFile file2, MultipartFile file3, String note) {
+    public void addNewPost(MultipartFile file1, MultipartFile file2, MultipartFile file3, MultipartFile file4, String note) {
         try {
 
             // identify user via token
@@ -66,6 +66,10 @@ public class PostServiceImpl implements PostService {
             if (file3 != null) {
                 String fileName3 = FileManager.uploadProfilePic(file3);
                 images.add(fileName3);
+            }
+            if (file4 != null) {
+                String fileName4 = FileManager.uploadProfilePic(file4);
+                images.add(fileName4);
             }
 
 
