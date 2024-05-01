@@ -11,9 +11,9 @@ public class PostDTO {
     private UserDTO user;
     private List<PostLikeDTO> likes;
     private List<PostCommentDTO> comments;
+    private boolean myLike;
 
-
-    public PostDTO(Integer id, Date date, String description, List<PostMediaDTO> images, UserDTO user, List<PostLikeDTO> likes, List<PostCommentDTO> comments) {
+    public PostDTO(Integer id, Date date, String description, List<PostMediaDTO> images, UserDTO user, List<PostLikeDTO> likes, List<PostCommentDTO> comments, boolean myLike) {
         this.id = id;
         this.date = date;
         this.description = description;
@@ -21,6 +21,7 @@ public class PostDTO {
         this.user = user;
         this.likes = likes;
         this.comments = comments;
+        this.myLike = myLike;
     }
 
     public Integer getId() {
@@ -79,6 +80,14 @@ public class PostDTO {
         this.comments = comments;
     }
 
+    public boolean isMyLike() {
+        return myLike;
+    }
+
+    public void setMyLike(boolean myLike) {
+        this.myLike = myLike;
+    }
+
     @Override
     public String toString() {
         return "PostDTO{" +
@@ -89,6 +98,7 @@ public class PostDTO {
                 ", user=" + user +
                 ", likes=" + likes +
                 ", comments=" + comments +
+                ", myLike=" + myLike +
                 '}';
     }
 }

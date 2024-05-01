@@ -56,9 +56,9 @@ public class PostController {
     }
 
     @PatchMapping("/like/{post}")
-    public ResponseEntity<CommonResponseDTO> likePost(@PathVariable Integer post){
-        postService.likePosts(post);
-        return new ResponseEntity<>(new CommonResponseDTO(true, "Post has been liked successfully!"), HttpStatus.OK);
+    public ResponseEntity<CommonDataResponseDTO> likePost(@PathVariable Integer post){
+        PostDTO postDTO = postService.likePosts(post);
+        return new ResponseEntity<>(new CommonDataResponseDTO<>(true, "Post has been liked successfully!", postDTO), HttpStatus.OK);
     }
 
     @PostMapping("/comment")
@@ -75,8 +75,8 @@ public class PostController {
 
     @GetMapping("/comment/post/{postId}")
     public ResponseEntity<CommonDataResponseDTO> getPostComment(@PathVariable Integer postId){
-//        List<CommentDTO> postCommentByPost = postService.getPostCommentByPost(postId);
-        List<CommentDTO> postCommentByPost = new ArrayList<>();
+        List<CommentDTO> postCommentByPost = postService.getPostCommentByPost(postId);
+//        List<CommentDTO> postCommentByPost = new ArrayList<>();
         System.out.println("--> 6" + postCommentByPost);
 //        return new ResponseEntity<>(new CommonDataResponseDTO<>(true, "Post comment are found successfully!", postCommentByPost), HttpStatus.OK);
 //        return new ResponseEntity<>(new CommonResponseDTO(true, "Post comment has been deleted successfully!"), HttpStatus.OK);

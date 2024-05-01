@@ -135,6 +135,8 @@ public class PostServiceImpl implements PostService {
 
             for (Post post : myPosts) {
 
+                boolean myLike = false;
+
                 List<PostMedia> myPostMedias = postMediaRepo.getMyPostMedias(post);
                 List<PostMediaDTO> postMediaDTOS = new ArrayList<>();
                 for (PostMedia media : myPostMedias) {
@@ -143,7 +145,7 @@ public class PostServiceImpl implements PostService {
 
                 List<PostLikeDTO> postLikesDTOs = new ArrayList<>();
                 List<PostLike> postLikes = postLikeRepo.getPostLikes(post);
-                for (PostLike postLike: postLikes) {
+                for (PostLike postLike : postLikes) {
                     OurUsers user = postLike.getUser();
                     UserDTO userDTO2 = new UserDTO(
                             user.getId(),
@@ -158,12 +160,13 @@ public class PostServiceImpl implements PostService {
                             user.getStatus(),
                             user.getProfilePic()
                     );
+                    if (userDTO.getId().equals(ourUsers.getId())) myLike = true;
                     postLikesDTOs.add(new PostLikeDTO(postLike.getId(), postLike.getDate(), userDTO2));
                 }
 
                 List<PostCommentDTO> postCommentDTOs = new ArrayList<>();
                 List<PostComment> postComments = postCommentRepo.getPostCommentByPost(post);
-                for (PostComment postComment: postComments) {
+                for (PostComment postComment : postComments) {
                     OurUsers user = postComment.getUser();
                     UserDTO userDTO3 = new UserDTO(
                             user.getId(),
@@ -189,7 +192,7 @@ public class PostServiceImpl implements PostService {
                 }
 
                 // new PostDTO(id, date, description, images, user);
-                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs, postCommentDTOs));
+                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs, postCommentDTOs, myLike));
             }
 
             return myPostsRes;
@@ -215,6 +218,8 @@ public class PostServiceImpl implements PostService {
 
             for (Post post : myPosts) {
 
+                boolean myLike = false;
+
                 List<PostMedia> myPostMedias = postMediaRepo.getMyPostMedias(post);
                 List<PostMediaDTO> postMediaDTOS = new ArrayList<>();
                 for (PostMedia media : myPostMedias) {
@@ -223,7 +228,7 @@ public class PostServiceImpl implements PostService {
 
                 List<PostLikeDTO> postLikesDTOs = new ArrayList<>();
                 List<PostLike> postLikes = postLikeRepo.getPostLikes(post);
-                for (PostLike postLike: postLikes) {
+                for (PostLike postLike : postLikes) {
                     OurUsers user = postLike.getUser();
                     UserDTO userDTO = new UserDTO(
                             user.getId(),
@@ -238,12 +243,13 @@ public class PostServiceImpl implements PostService {
                             user.getStatus(),
                             user.getProfilePic()
                     );
+                    if (userDTO.getId().equals(ourUsers.getId())) myLike = true;
                     postLikesDTOs.add(new PostLikeDTO(postLike.getId(), postLike.getDate(), userDTO));
                 }
 
                 List<PostCommentDTO> postCommentDTOs = new ArrayList<>();
                 List<PostComment> postComments = postCommentRepo.getPostCommentByPost(post);
-                for (PostComment postComment: postComments) {
+                for (PostComment postComment : postComments) {
                     OurUsers user = postComment.getUser();
                     UserDTO userDTO = new UserDTO(
                             user.getId(),
@@ -286,7 +292,7 @@ public class PostServiceImpl implements PostService {
                 );
 
                 // new PostDTO(id, date, description, images, user);
-                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs, postCommentDTOs));
+                myPostsRes.add(new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs, postCommentDTOs, myLike));
             }
 
             return myPostsRes;
@@ -297,7 +303,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public boolean likePosts(Integer post) {
+    public PostDTO likePosts(Integer postId) {
         try {
             // identify user via token
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -308,19 +314,94 @@ public class PostServiceImpl implements PostService {
             OurUsers ourUsers = byEmail.get();
 
             // get post
-            Optional<Post> byId = postRepo.findById(post);
-            if(byId.isEmpty()) throw new PostException(404, "Post not found");
+            Optional<Post> byId = postRepo.findById(postId);
+            if (byId.isEmpty()) throw new PostException(404, "Post not found");
 
+            Post post = byId.get();
 
             Optional<PostLike> postLikesWithUserAndPost = postLikeRepo.getPostLikesWithUserAndPost(byId.get(), ourUsers);
-            if(postLikesWithUserAndPost.isEmpty()) {
+            if (postLikesWithUserAndPost.isEmpty()) {
                 // PostLike(OurUsers user, Post post, Date date)
                 postLikeRepo.save(new PostLike(ourUsers, byId.get(), new Date()));
             } else {
                 postLikeRepo.delete(postLikesWithUserAndPost.get());
             }
 
-            return true;
+            boolean myLike = false;
+
+            List<PostMedia> myPostMedias = postMediaRepo.getMyPostMedias(post);
+            List<PostMediaDTO> postMediaDTOS = new ArrayList<>();
+            for (PostMedia media : myPostMedias) {
+                postMediaDTOS.add(new PostMediaDTO(media.getId(), media.getUrl()));
+            }
+
+            List<PostLikeDTO> postLikesDTOs = new ArrayList<>();
+            List<PostLike> postLikes = postLikeRepo.getPostLikes(post);
+            for (PostLike postLike : postLikes) {
+                OurUsers user = postLike.getUser();
+                UserDTO userDTO = new UserDTO(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        user.getVisibility(),
+                        user.getStatus(),
+                        user.getProfilePic()
+                );
+                if (userDTO.getId().equals(ourUsers.getId())) myLike = true;
+                postLikesDTOs.add(new PostLikeDTO(postLike.getId(), postLike.getDate(), userDTO));
+            }
+
+            List<PostCommentDTO> postCommentDTOs = new ArrayList<>();
+            List<PostComment> postComments = postCommentRepo.getPostCommentByPost(post);
+            for (PostComment postComment : postComments) {
+                OurUsers user = postComment.getUser();
+                UserDTO userDTO = new UserDTO(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        user.getVisibility(),
+                        user.getStatus(),
+                        user.getProfilePic()
+                );
+
+                Date date = postComment.getDate();
+
+                postCommentDTOs.add(new PostCommentDTO(
+                        postComment.getId(),
+                        post.getId(),
+                        postComment.getComment(),
+                        userDTO,
+                        date
+                ));
+            }
+
+            OurUsers user = post.getUser();
+            UserDTO userDTO = new UserDTO(
+                    user.getId(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    user.getVisibility(),
+                    user.getStatus(),
+                    user.getProfilePic()
+            );
+
+            // new PostDTO(id, date, description, images, user);
+            return new PostDTO(post.getId(), post.getDate(), post.getDescription(), postMediaDTOS, userDTO, postLikesDTOs, postCommentDTOs, myLike);
         } catch (Exception e) {
             throw e;
         }
@@ -339,7 +420,7 @@ public class PostServiceImpl implements PostService {
 
             // get post
             Optional<Post> byId = postRepo.findById(postComment.getPostId());
-            if(byId.isEmpty()) throw new PostException(404, "Post not found");
+            if (byId.isEmpty()) throw new PostException(404, "Post not found");
 
             // PostComment(OurUsers user, Post post, Date date, String comment)
             postCommentRepo.save(new PostComment(ourUsers, byId.get(), new Date(), postComment.getComment()));
@@ -363,7 +444,7 @@ public class PostServiceImpl implements PostService {
 
             // find the post
             Optional<PostComment> byId = postCommentRepo.findById(commentId);
-            if(byId.isEmpty()) throw new PostException(404, "Comment not found");
+            if (byId.isEmpty()) throw new PostException(404, "Comment not found");
 
             // get comment user
             OurUsers commentUser = byId.get().getUser();
@@ -375,7 +456,7 @@ public class PostServiceImpl implements PostService {
             OurUsers postUser = post.getUser();
 
             // check authorization
-            if(!(authUsers.equals(commentUser) || authUsers.equals(postUser)))
+            if (!(authUsers.equals(commentUser) || authUsers.equals(postUser)))
                 throw new UserException(401, "Unauthorized action");
 
             // delete the comment
@@ -401,22 +482,22 @@ public class PostServiceImpl implements PostService {
 
             // find the post
             Optional<Post> byId = postRepo.findById(postId);
-            if(byId.isEmpty())
+            if (byId.isEmpty())
                 throw new PostException(404, "Post not found");
 
             // find the comments
             List<CommentDTO> postCommentDTOs = new ArrayList<>();
 
             System.out.println("--> 1");
-
             List<PostComment> postCommentByPost = postCommentRepo.getPostCommentByPost(byId.get());
 
-            System.out.println("--> 2");
+            System.out.println("--> 2: " + postCommentByPost.size());
             for (PostComment postComment : postCommentByPost) {
                 OurUsers user = postComment.getUser();
                 System.out.println("--> 3");
                 // CommentDTO(Integer id, Date date, String comment, UserDTO user)
-                postCommentDTOs.add(new CommentDTO(postComment.getId(), postComment.getDate(), postComment.getComment(), new UserDTO(
+
+                UserDTO userDTO = new UserDTO(
                         user.getId(),
                         user.getFirstName(),
                         user.getLastName(),
@@ -428,14 +509,16 @@ public class PostServiceImpl implements PostService {
                         user.getVisibility(),
                         user.getStatus(),
                         user.getProfilePic()
-                )));
+                );
+
+                postCommentDTOs.add(new CommentDTO(postComment.getId(), postComment.getDate(), postComment.getComment(), userDTO));
                 System.out.println("--> 5");
             }
 
             return postCommentDTOs;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-          throw e;
+            throw e;
         }
     }
 }
