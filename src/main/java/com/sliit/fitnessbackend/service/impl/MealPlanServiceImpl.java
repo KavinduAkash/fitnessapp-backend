@@ -169,10 +169,9 @@ public class MealPlanServiceImpl implements MealPlanService {
             MealPlan meal1 = byId.get();
 
             // update meal plan
-            meal1.setTitle(meal1.getTitle());
-            meal1.setCurrent(meal1.isCurrent());
-            meal1.setDescription(meal1.getDescription());
-            meal1.setStatus(meal1.getStatus());
+            meal1.setTitle(mealPlan.getTitle());
+            meal1.setCurrent(mealPlan.isCurrent());
+            meal1.setDescription(mealPlan.getDescription());
 
             // save meal plan
             MealPlan save = mealPlaneRepo.save(meal1);
