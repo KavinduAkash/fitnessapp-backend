@@ -95,6 +95,40 @@ public class MealPlanServiceImpl implements MealPlanService {
     }
 
     @Override
+    public List<MealPlanDTO> getMealMyPlans(Integer id) {
+        try {
+            // identify user via token
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Optional<OurUsers> byEmail = ourUserRepo.findByEmail(authentication.getName());
+            if (byEmail.isEmpty()) throw new UserException(401, "Unauthorized action");
+
+            // get auth user
+            OurUsers authUsers = byEmail.get();
+
+            Optional<OurUsers> byId = ourUserRepo.findById(id);
+            if(byId.isEmpty()) throw new UserException(404, "User not found");
+
+            List<MealPlanDTO> mealPlanDTOS = new ArrayList<>();
+            List<MealPlan> mealPlansByUser = mealPlaneRepo.getMealPlansByUser(byId.get());
+            for (MealPlan mealPlan : mealPlansByUser) {
+                List<MealDTO> mealDTOS = new ArrayList<>();
+                List<Meal> mealByMealPlan = mealRepo.getMealByMealPlan(mealPlan);
+                for (Meal meal : mealByMealPlan) {
+                    // MealDTO(Integer id, String meal_name, String description)
+                    mealDTOS.add(new MealDTO(meal.getId(), meal.getMealName(), meal.getDescription()));
+                }
+                // MealPlanDTO(Integer id, String title, String description, boolean isCurrent, UserDTO userDTO, List<MealDTO> meals)
+                mealPlanDTOS.add(new MealPlanDTO(mealPlan.getId(), mealPlan.getTitle(), mealPlan.getDescription(),
+                        mealPlan.isCurrent(), prepreUserDTO(mealPlan.getUser()), mealDTOS));
+            }
+
+            return mealPlanDTOS;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
     public List<MealPlanDTO> getMealPlans() {
         try {
             List<MealPlanDTO> mealPlanDTOS = new ArrayList<>();

@@ -9,6 +9,7 @@ import java.util.List;
 public interface MealPlanService {
     public boolean addMealPlan(MealPlanSaveRequestDTO mealPlan);
     public List<MealPlanDTO> getMealMyPlans();
+    public List<MealPlanDTO> getMealMyPlans(Integer id);
     public List<MealPlanDTO> getMealPlans();
     public boolean updateMealPlan(MealPlanUpdateRequestDTO mealPlan);
     public boolean deleteMealPlan(Integer mealPlanId);

@@ -37,6 +37,14 @@ public class MealController {
                 ), HttpStatus.OK);
     }
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity getMealPlan(@PathVariable Integer id) {
+        List<MealPlanDTO> mealMyPlans = mealPlanService.getMealMyPlans(id);
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "Meal plan created successfully!", mealMyPlans
+                ), HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity getMealPlan() {
         List<MealPlanDTO> mealMyPlans = mealPlanService.getMealMyPlans();
