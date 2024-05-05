@@ -216,9 +216,11 @@ public class MealPlanServiceImpl implements MealPlanService {
             if(!mealPlan.getUser().equals(authUsers))
                 throw new MealException(401, "Unauthorized action");
 
+            List<Meal> mealByMealPlan = mealRepo.getMealByMealPlan(mealPlan);
+            mealRepo.deleteAll(mealByMealPlan);
+
             // delete the meal plan
-            mealPlan.setStatus(MealStatus.DELETED);
-            mealPlaneRepo.save(mealPlan);
+            mealPlaneRepo.delete(mealPlan);
 
             return true;
         } catch (Exception e) {
