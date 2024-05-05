@@ -28,11 +28,27 @@ public class WorkOutController {
                 ), HttpStatus.OK);
     }
 
+    @PutMapping
+    public ResponseEntity updateWork(@RequestBody WorkoutSaveRequestDTO workout) {
+        boolean save = workOutService.updateWorkOut(workout);
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "Workout plan created successfully!", ""
+                ), HttpStatus.OK);
+    }
+
     @PostMapping("/exercise")
     public ResponseEntity createExercise(@RequestBody ExcersiceDTO exercise) {
         boolean save = workOutService.addNewExercise(exercise);
         return new ResponseEntity<>(
                 new CommonDataResponseDTO<>(true, "Exercise created successfully!", ""
+                ), HttpStatus.OK);
+    }
+
+    @GetMapping("/exercise")
+    public ResponseEntity getExercise() {
+        List<ExcersiceDTO> results = workOutService.getAllExercise();
+        return new ResponseEntity<>(
+                new CommonDataResponseDTO<>(true, "Exercise created successfully!", results
                 ), HttpStatus.OK);
     }
 

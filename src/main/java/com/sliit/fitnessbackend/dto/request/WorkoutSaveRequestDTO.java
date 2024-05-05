@@ -1,6 +1,7 @@
 package com.sliit.fitnessbackend.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sliit.fitnessbackend.dto.ExcersiceDTO;
 import com.sliit.fitnessbackend.dto.WorkOutExcersiceDTO;
 import com.sliit.fitnessbackend.entity.OurUsers;
 import com.sliit.fitnessbackend.enums.WorkOutStatus;
@@ -12,15 +13,24 @@ import java.util.Date;
 import java.util.List;
 
 public class WorkoutSaveRequestDTO {
+    private Integer id;
     private String title;
     private String description;
     private boolean isCurrent;
-    private List<WorkOutExcersiceDTO> exercises;
+    private List<ExcersiceDTO> exercises;
 
     public WorkoutSaveRequestDTO() {
     }
 
-    public WorkoutSaveRequestDTO(String title, String description, boolean isCurrent, List<WorkOutExcersiceDTO> exercises) {
+    public WorkoutSaveRequestDTO(String title, String description, boolean isCurrent, List<ExcersiceDTO> exercises) {
+        this.title = title;
+        this.description = description;
+        this.isCurrent = isCurrent;
+        this.exercises = exercises;
+    }
+
+    public WorkoutSaveRequestDTO(Integer id, String title, String description, boolean isCurrent, List<ExcersiceDTO> exercises) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.isCurrent = isCurrent;
@@ -51,12 +61,20 @@ public class WorkoutSaveRequestDTO {
         isCurrent = current;
     }
 
-    public List<WorkOutExcersiceDTO> getExercises() {
+    public List<ExcersiceDTO> getExercises() {
         return exercises;
     }
 
-    public void setExercises(List<WorkOutExcersiceDTO> exercises) {
+    public void setExercises(List<ExcersiceDTO> exercises) {
         this.exercises = exercises;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override

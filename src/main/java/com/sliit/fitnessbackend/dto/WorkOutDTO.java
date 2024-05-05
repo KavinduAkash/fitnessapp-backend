@@ -7,17 +7,28 @@ public class WorkOutDTO {
     private String title;
     private String description;
     private boolean isCurrent;
-    private List<WorkOutExcersiceDTO> exercises;
+    private List<ExcersiceDTO> exercises;
+
+    private UserDTO userDTO;
 
     public WorkOutDTO() {
     }
 
-    public WorkOutDTO(Integer id, String title, String description, boolean isCurrent, List<WorkOutExcersiceDTO> exercises) {
+    public WorkOutDTO(Integer id, String title, String description, boolean isCurrent, List<ExcersiceDTO> exercises) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.isCurrent = isCurrent;
         this.exercises = exercises;
+    }
+
+    public WorkOutDTO(Integer id, String title, String description, boolean isCurrent, List<ExcersiceDTO> exercises, UserDTO userDTO) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.isCurrent = isCurrent;
+        this.exercises = exercises;
+        this.userDTO = userDTO;
     }
 
     public Integer getId() {
@@ -52,12 +63,20 @@ public class WorkOutDTO {
         isCurrent = current;
     }
 
-    public List<WorkOutExcersiceDTO> getExercises() {
+    public List<ExcersiceDTO> getExercises() {
         return exercises;
     }
 
-    public void setExercises(List<WorkOutExcersiceDTO> exercises) {
+    public void setExercises(List<ExcersiceDTO> exercises) {
         this.exercises = exercises;
+    }
+
+    public UserDTO getUserDTO() {
+        return userDTO;
+    }
+
+    public void setUserDTO(UserDTO userDTO) {
+        this.userDTO = userDTO;
     }
 
     @Override

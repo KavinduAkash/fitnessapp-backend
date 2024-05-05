@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 public class WorkOutExcersiceDTO {
     private Integer id;
     private Integer excersiceId;
+    private String excersiceName;
     private String value;
 
     public WorkOutExcersiceDTO() {
@@ -16,6 +17,21 @@ public class WorkOutExcersiceDTO {
         this.id = id;
         this.excersiceId = excersiceId;
         this.value = value;
+    }
+
+    public WorkOutExcersiceDTO(Integer id, Integer excersiceId, String excersiceName, String value) {
+        this.id = id;
+        this.excersiceId = excersiceId;
+        this.excersiceName = excersiceName;
+        this.value = value;
+    }
+
+    public String getExcersiceName() {
+        return excersiceName;
+    }
+
+    public void setExcersiceName(String excersiceName) {
+        this.excersiceName = excersiceName;
     }
 
     public Integer getId() {

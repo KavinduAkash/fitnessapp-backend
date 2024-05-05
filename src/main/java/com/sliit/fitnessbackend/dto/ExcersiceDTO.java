@@ -13,14 +13,17 @@ public class ExcersiceDTO {
     private ExcersiceType type;
     private ExcersiceValues value;
 
+    private String desc;
+
     public ExcersiceDTO() {
     }
 
-    public ExcersiceDTO(Integer id, String name, ExcersiceType type, ExcersiceValues value) {
+    public ExcersiceDTO(Integer id, String name, ExcersiceType type, ExcersiceValues value, String desc) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.value = value;
+        this.desc = desc;
     }
 
     public Integer getId() {
@@ -53,6 +56,14 @@ public class ExcersiceDTO {
 
     public void setValue(ExcersiceValues value) {
         this.value = value;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     @Override

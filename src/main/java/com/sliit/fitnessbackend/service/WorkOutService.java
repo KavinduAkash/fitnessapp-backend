@@ -8,7 +8,9 @@ import java.util.List;
 
 public interface WorkOutService {
     public boolean addNewWorkOut(WorkoutSaveRequestDTO workout);
+    public boolean updateWorkOut(WorkoutSaveRequestDTO workout);
     public boolean addNewExercise(ExcersiceDTO exercise);
+    public List<ExcersiceDTO> getAllExercise();
     public List<WorkOutDTO> getMyWorkOut();
     public List<WorkOutDTO> getWorkOut();
     public boolean deleteWorkOut(Integer id);
