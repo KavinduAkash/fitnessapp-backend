@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.sliit.fitnessbackend", "com.sliit.fitnessbackend.controller"})
 @EnableAsync
 @EnableTransactionManagement
 @EnableJpaAuditing
