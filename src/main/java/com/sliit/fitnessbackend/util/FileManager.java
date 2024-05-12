@@ -28,6 +28,9 @@ public class FileManager {
             File imageFile = new File(filePath);
             // Write the file bytes to the created file
             Files.write(imageFile.toPath(), bytes);
+
+            FileUploader.upload(filePath, fileName);
+
             return fileName;
         } catch (IOException e) {
             throw e;
